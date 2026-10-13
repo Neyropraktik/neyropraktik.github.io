@@ -1,0 +1,15 @@
+# Секреты — никогда не коммитить
+config/.env
+.env
+
+# Служебное
+__pycache__/
+*.pyc
+.DS_Store
+
+# Заказы и логи бота (локальные)
+bot/orders.json
+bot/*.log
+
+# Рантайм-состояние бота
+bot/state.json
