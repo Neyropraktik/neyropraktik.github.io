@@ -40,7 +40,7 @@ config/.env.example     Шаблон конфигурации (скопиров�
 - **Теглайн**: «ИИ • Идеи • Практика • Результат» — в гером лендинга, футерах, приветствии и каталоге бота, описании канале и закрепе.
 - **Фавикон**: `assets/img/favicon.svg` (кружок+«НП» в брендовом градиенте).
 - **Соцпревью**: `index.html` ссылается на `assets/brand/banner.jpg` — положите файл баннера, превью заработает.
-- **PDF**: заголовки H1/H2/H3 печатаются брендовой маджентой (`scripts/build_pdf.py`).
+- **PDF**: тёмная неон-обложка, маджента в заголовках, карточки промптов и брендовые таблицы (`scripts/build_pdf.py` + `scripts/pdf_style.css`).
 
 ## Бот
 
@@ -78,7 +78,15 @@ python3 scripts/setup_channel.py --apply --banner assets/brand/banner.jpg    # �
 bash scripts/build_all.sh   # products/*.md -> pdf/
 ```
 
-Требуется `fpdf2` (`pip install fpdf2`) и шрифты DejaVu.
+Дизайн: тёмная неон-обложка, карточки промптов, брендовые таблицы — всё по
+бренд-палитре сайта. Рендер: WeasyPrint (HTML + CSS), шрифты с кириллицей
+Unbounded / Inter / JetBrains Mono лежат в `assets/fonts/`.
+
+Требуется один раз поставить зависимости:
+
+```bash
+python3 -m pip install --user --break-system-packages weasyprint markdown
+```
 
 ---
 

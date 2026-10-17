@@ -1,0 +1,265 @@
+/* НейроПрактик 2026 — фирменный стиль PDF-продуктов (рендер: WeasyPrint).
+   Палитра: тёмный фон #0c0817, маджента #d331e8 / #e44dff, циан #3ddbe8.
+   Подстановки __FONT_*__ делает scripts/build_pdf.py. */
+
+@font-face { font-family: "Unbounded"; font-weight: 400; font-style: normal;
+  src: url("__FONT_UNBOUNDED_400__") format("truetype"); }
+@font-face { font-family: "Unbounded"; font-weight: 600; font-style: normal;
+  src: url("__FONT_UNBOUNDED_600__") format("truetype"); }
+@font-face { font-family: "Unbounded"; font-weight: 800; font-style: normal;
+  src: url("__FONT_UNBOUNDED_800__") format("truetype"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-style: normal;
+  src: url("__FONT_INTER_400__") format("truetype"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-style: normal;
+  src: url("__FONT_INTER_600__") format("truetype"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-style: normal;
+  src: url("__FONT_INTER_700__") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 400; font-style: normal;
+  src: url("__FONT_MONO_400__") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 700; font-style: normal;
+  src: url("__FONT_MONO_700__") format("truetype"); }
+
+/* ── Страницы ─────────────────────────────────────────────────────────────── */
+
+@page {
+  size: A4;
+  margin: 17mm 16mm 15mm 16mm;
+
+  @top-left {
+    content: "НейроПрактик 2026";
+    font-family: "Inter"; font-size: 6.8pt; color: #b3a7ca;
+    padding-bottom: 2.5mm;
+  }
+  @top-right {
+    content: string(sect);
+    font-family: "Inter"; font-size: 6.8pt; color: #b3a7ca;
+    text-align: right; padding-bottom: 2.5mm;
+  }
+  @bottom-left {
+    content: "@neuropraktik_rubot";
+    font-family: "Inter"; font-size: 6.8pt; color: #b3a7ca;
+    padding-top: 2.5mm;
+  }
+  @bottom-right {
+    content: "стр. " counter(page) " из " counter(pages);
+    font-family: "Inter"; font-size: 6.8pt; color: #b3a7ca;
+    text-align: right; padding-top: 2.5mm;
+  }
+}
+
+@page cover {
+  margin: 0;
+  @top-left { content: none; } @top-right { content: none; }
+  @bottom-left { content: none; } @bottom-right { content: none; }
+}
+
+/* ── База ─────────────────────────────────────────────────────────────────── */
+
+html { font-family: "Inter"; font-size: 10.5pt; color: #2a2338; line-height: 1.62; }
+body { margin: 0; }
+p { margin: 0 0 7px; }
+strong { font-weight: 600; color: #1d142e; }
+p > strong:first-child { color: #b019c9; }
+a { color: #b019c9; text-decoration: none; }
+code { font-family: "JetBrains Mono"; font-size: 8.6pt; background: #f4eefb;
+  color: #7d12a8; padding: 1px 4px; border-radius: 4px; }
+pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+em { font-style: normal; font-weight: 600; color: #4a3b5e; }
+
+/* ── Обложка ──────────────────────────────────────────────────────────────── */
+
+.cover {
+  page: cover; break-after: page;
+  position: relative; width: 210mm; height: 296.8mm;
+  background: #0c0817; color: #ffffff; overflow: hidden;
+}
+.cover .glow-m {
+  position: absolute; top: -55mm; right: -45mm; width: 170mm; height: 170mm;
+  background: radial-gradient(circle, rgba(211,49,232,0.50) 0%, rgba(211,49,232,0.16) 42%, rgba(211,49,232,0) 68%);
+}
+.cover .glow-c {
+  position: absolute; bottom: -60mm; left: -45mm; width: 175mm; height: 175mm;
+  background: radial-gradient(circle, rgba(61,219,232,0.26) 0%, rgba(61,219,232,0.08) 45%, rgba(61,219,232,0) 70%);
+}
+.cover .dots {
+  position: absolute; top: 0; left: 0; width: 210mm; height: 296.8mm;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.055) 0.9px, rgba(255,255,255,0) 1.5px);
+  background-size: 13px 13px;
+}
+.cover .streak {
+  position: absolute; top: 205mm; left: -25mm; width: 260mm; height: 1.1mm;
+  background: linear-gradient(90deg, rgba(228,77,255,0), rgba(228,77,255,0.9) 22%, #3ddbe8 78%, rgba(61,219,232,0));
+  transform: rotate(-16deg); opacity: 0.8;
+}
+.cover .year {
+  position: absolute; right: 8mm; bottom: 9mm;
+  font-family: "Unbounded"; font-weight: 800; font-size: 84pt;
+  color: rgba(255,255,255,0.055);
+}
+.cover .top {
+  position: absolute; top: 16mm; left: 18mm; right: 18mm;
+}
+.cover .chip {
+  display: inline-block; width: 11mm; height: 11mm; border-radius: 3.2mm;
+  background: linear-gradient(135deg, #d331e8, #7c2bd6);
+  font-family: "Unbounded"; font-weight: 800; font-size: 11.5pt; color: #ffffff;
+  text-align: center; line-height: 11mm; vertical-align: middle;
+}
+.cover .brand {
+  display: inline-block; vertical-align: middle; margin-left: 4mm;
+  font-family: "Unbounded"; font-weight: 600; font-size: 10.5pt; letter-spacing: 0.02em;
+}
+.cover .brand-sub {
+  display: block; margin-left: 15mm; margin-top: 1mm;
+  font-family: "Inter"; font-size: 7.6pt; color: #a394be; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cover .main { position: absolute; top: 68mm; left: 18mm; right: 18mm; }
+.cover .kicker {
+  font-family: "Unbounded"; font-weight: 600; font-size: 8.5pt; letter-spacing: 0.18em;
+  color: #e44dff; text-transform: uppercase; margin-bottom: 8mm;
+}
+.cover h1 {
+  font-family: "Unbounded"; font-weight: 800; color: #ffffff;
+  margin: 0 0 7mm; line-height: 1.22; letter-spacing: -0.01em;
+}
+.cover h1.t-xl { font-size: 25pt; }
+.cover h1.t-l  { font-size: 22pt; }
+.cover h1.t-m  { font-size: 19.5pt; }
+.cover .lead {
+  max-width: 148mm; font-size: 10.5pt; line-height: 1.65; color: #c0b4d8; margin: 0 0 9mm;
+}
+.cover .pills { margin-top: 2mm; }
+.cover .pill {
+  display: inline-block; margin: 0 3mm 3mm 0; padding: 1.8mm 4.4mm;
+  border: 0.35mm solid rgba(228,77,255,0.55); border-radius: 10mm;
+  font-size: 8pt; color: #ecc4f7; letter-spacing: 0.03em;
+}
+.cover .bottom { position: absolute; left: 18mm; right: 18mm; bottom: 16mm; }
+.cover .rule {
+  width: 46mm; height: 1.1mm; border-radius: 1mm; margin-bottom: 5mm;
+  background: linear-gradient(90deg, #d331e8, #3ddbe8);
+}
+.cover .tagline {
+  font-family: "Unbounded"; font-weight: 600; font-size: 10pt; color: #e44dff;
+  margin-bottom: 2.5mm;
+}
+.cover .meta { font-size: 8.2pt; color: #9d8fb8; line-height: 1.7; }
+
+/* ── Контент ──────────────────────────────────────────────────────────────── */
+
+.content { }
+
+h2 {
+  string-set: sect content(text);
+  font-family: "Unbounded"; font-weight: 600; font-size: 15pt; color: #1c1330;
+  line-height: 1.3; margin: 4mm 0 7px; letter-spacing: -0.005em;
+}
+h2:first-child { margin-top: 0; }
+h2::before {
+  content: ""; display: block; width: 34px; height: 3.2px; border-radius: 2px;
+  background: linear-gradient(90deg, #d331e8, #3ddbe8); margin-bottom: 9px;
+}
+h2.module-h { position: relative; }
+.modnum {
+  position: absolute; right: 0; top: -17px;
+  font-family: "Unbounded"; font-weight: 800; font-size: 30pt;
+  color: #f3eafa; line-height: 1;
+}
+h3 {
+  font-family: "Unbounded"; font-weight: 600; font-size: 11pt; color: #b019c9;
+  margin: 14px 0 6px;
+}
+h2 + p, h2 + ul, h2 + ol, h2 + pre, h2 + table, h2 + blockquote { margin-top: 0; }
+p, ul, ol, table, pre, blockquote { break-inside: auto; }
+pre, blockquote, table, tr, li { break-inside: avoid; }
+h2, h3 { break-after: avoid; }
+
+ul { margin: 0 0 8px; padding: 0; list-style: none; }
+ul li { position: relative; padding-left: 15px; margin: 3px 0; }
+ul li::before {
+  content: ""; position: absolute; left: 2px; top: 7.5px;
+  width: 5.5px; height: 5.5px; border-radius: 50%;
+  background: linear-gradient(135deg, #d331e8, #9b2ee0);
+}
+ol { margin: 0 0 8px; padding: 0; list-style: none; counter-reset: li; }
+ol li { position: relative; padding-left: 21px; margin: 4px 0; counter-increment: li; }
+ol li::before {
+  content: counter(li) "."; position: absolute; left: 0; top: 0;
+  font-family: "Unbounded"; font-weight: 600; font-size: 9pt; color: #d331e8;
+}
+
+hr { border: none; height: 1px; margin: 13px 0;
+  background: linear-gradient(90deg, rgba(211,49,232,0.55), rgba(61,219,232,0.35) 55%, rgba(255,255,255,0)); }
+
+blockquote {
+  margin: 6px 0 12px; padding: 10px 14px;
+  background: #faf0fd; border-left: 3.5px solid #d331e8;
+  border-radius: 0 9px 9px 0; color: #503e66;
+}
+blockquote p { margin: 0; }
+
+/* Карточка промпта */
+pre {
+  position: relative; margin: 9px 0 6px; padding: 17px 19px 15px;
+  background: #130c20; border: 1px solid rgba(211,49,232,0.28); border-radius: 10px;
+  color: #e9e2f6; font-family: "JetBrains Mono"; font-size: 9.4pt; line-height: 1.68;
+}
+pre::before {
+  content: "ПРОМПТ"; position: absolute; top: -7px; left: 14px;
+  font-family: "Inter"; font-weight: 700; font-size: 6.4pt; letter-spacing: 0.12em;
+  color: #ffffff; background: linear-gradient(90deg, #d331e8, #a02bd8);
+  padding: 1.5px 7px; border-radius: 4px;
+}
+pre code { white-space: pre-wrap; word-wrap: break-word; display: block; }
+.ph { color: #3ddbe8; font-weight: 700; }
+.prompt-note {
+  position: relative; margin: 0 0 4px; padding-left: 14px;
+  font-size: 8.6pt; color: #8b7ca6;
+}
+.prompt-note::before {
+  content: ""; position: absolute; left: 0; top: 0.52em;
+  width: 5.5px; height: 5.5px; border-radius: 50%;
+  background: linear-gradient(135deg, #3ddbe8, #2bb3c9);
+}
+
+/* Таблицы */
+table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 8px 0 14px;
+  font-size: 9pt; }
+thead th {
+  background: #170f26; color: #f4edff;
+  font-family: "Unbounded"; font-weight: 600; font-size: 7.6pt; letter-spacing: 0.03em;
+  text-align: left; padding: 7px 9px;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td { padding: 7px 9px; border-bottom: 0.4px solid #ece3f7; vertical-align: top; }
+tbody tr:nth-child(even) td { background: #faf6fe; }
+tbody tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+tbody tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+/* Чек-лист: колонка с галочками */
+.doc-checklist thead th:first-child { width: 7%; }
+.doc-checklist tbody td:first-child { text-align: center; }
+.cb { display: inline-block; width: 11px; height: 11px;
+  border: 1.4px solid #d331e8; border-radius: 3.5px; background: #ffffff; }
+.cb.on { background: #d331e8; }
+.doc-checklist tbody td:nth-child(2) { font-weight: 600; color: #1d142e; white-space: nowrap; }
+.doc-checklist tbody td { padding: 8.5px 9px; }
+
+/* Библиотеки промптов: каждый шаблон — с новой страницы, номер — водяной знак */
+.doc-prompts hr, .doc-guide hr { display: none; }
+.doc-prompts h2, .doc-guide h2 { break-before: page; }
+.doc-prompts h2:first-child, .doc-guide h2:first-child { break-before: auto; }
+.doc-prompts { counter-reset: prompt; }
+.doc-prompts h2 { counter-increment: prompt; position: relative; }
+.doc-prompts h2::after {
+  content: counter(prompt, decimal-leading-zero);
+  position: absolute; right: 0; top: -17px;
+  font-family: "Unbounded"; font-weight: 800; font-size: 30pt;
+  color: #f3eafa; line-height: 1;
+}
+
+/* Хвост документа: «Бот курса: …» */
+p.doc-end { margin-top: 12px; padding-top: 9px; border-top: 1px solid #ece3f7;
+  font-size: 8.6pt; color: #7a6c94; }
