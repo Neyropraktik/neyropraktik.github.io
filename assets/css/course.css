@@ -446,6 +446,3 @@ html[data-theme="dark"] .chip-lock { border-color: rgba(228, 77, 255, 0.5); }
 
 .modules-note { margin-top: 18px; color: var(--muted); font-size: 15px; }
 
-.np-lock-mark { display: inline-flex; vertical-align: -2px; margin-left: 6px; color: var(--muted); }
-.np-lock-mark svg { width: 13px; height: 13px; display: block; }
-.np-unlock-mark { margin-left: 6px; font-size: 13px; font-weight: 600; color: var(--green); }

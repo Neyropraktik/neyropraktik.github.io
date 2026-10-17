@@ -62,28 +62,6 @@
   /* ---------- значки «закрыто/открыто» в оглавлениях ---------- */
 
   function decorate() {
-    var links = doc.querySelectorAll('a[href^="modul-"]');
-    for (var i = 0; i < links.length; i++) {
-      var a = links[i];
-      var m = (a.getAttribute("href") || "").match(/modul-([1-5])\.html/);
-      if (!m || m[1] === "1") continue; // модуль 1 бесплатный — значок не нужен
-      var lock = a.querySelector(".np-lock-mark");
-      var open = a.querySelector(".np-unlock-mark");
-      if (isUnlocked()) {
-        if (lock) lock.remove();
-        if (!open) {
-          open = doc.createElement("span");
-          open.className = "np-unlock-mark";
-          open.textContent = " ✓";
-          a.appendChild(open);
-        }
-      } else if (!lock) {
-        lock = doc.createElement("span");
-        lock.className = "np-lock-mark";
-        lock.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="10" width="15" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.6a4 4 0 0 1 8 0V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-        a.appendChild(lock);
-      }
-    }
     // подписи у ссылок на странице программы
     var hints = doc.querySelectorAll(".lock-hint.locked");
     for (var j = 0; j < hints.length; j++) {
