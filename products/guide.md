@@ -1,94 +1,96 @@
-# NeuroSeti 2026 — Complete Guide
+# НейроПрактик 2026. Гайд от промпта до автоматизации
 
-## Overview
-A practical guide to AI automation for professionals. Updated October 2026.
-
-## Table of Contents
-1. [Introduction](#introduction)
-2. [Models & Pricing](#models-and-pricing)
-3. [The 5-Step Prompt Formula](#the-5-step-prompt-formula)
-4. [Prompt Libraries](#prompt-libraries)
-5. [Channel Automation](#channel-automation)
-6. [B2B Services](#b2b-services)
+Практичный гайд для тех, кто хочет использовать нейросети как инструмент заработка, а не как игрушку. Без вебинаров, без дедлайнов — в своём темпе.
 
 ---
 
-## Introduction
+## О курсе
 
-NeuroSeti is a practical AI toolkit for professionals who want to use AI as a productivity multiplier, not a toy.
+НейроПрактик 2026 — текстовый курс из **5 модулей и 17 уроков**. Что внутри:
+• 5 тестов с автопроверкой
+• 9 практических заданий с критериями готовности
+• 1 финальный проект
+• Более 100 готовых промптов под HR, маркетинг и поиск работы
 
-**Core Principle:** The task matters more than the tool. Quality of prompt determines quality of output.
-
----
-
-## Models and Pricing
-
-| Model | Best For | Approx. Price (per 1M tokens) |
-|-------|----------|-------------------------------|
-| GPT-6 | General purpose, coding | $15–25 |
-| Claude 4 | Long documents, analysis | $12–20 |
-| DeepSeek V3 | Budget, reasoning | $1–5 |
-| Gemini 2.5 | Multimodal, search | $8–15 |
-
-*Prices are approximate and change frequently. Check manufacturer sites for current rates.*
+Формат урока: теория — пример — разбор, 8–12 минут чтения.
 
 ---
 
-## The 5-Step Prompt Formula
+## Модуль 1. База: как работают нейросети
 
-Every effective prompt follows this structure:
+• Что такое LLM и как модель «думает»
+• Токены, контекстное окно, температура — простыми словами
+• Какие модели есть в 2026 году: GPT, Claude, DeepSeek, Gemini и русскоязычные аналоги
+• Цены и подписки: сколько на самом деле стоит работать с ИИ
+• Как выбрать модель под задачу: текст, код, картинка, анализ данных
 
-1. **Context** — What's the situation?
-2. **Audience** — Who is reading this?
-3. **Tone** — How should it sound?
-4. **Format** — What structure is expected?
-5. **Constraints** — What must not appear?
-
----
-
-## Prompt Libraries
-
-### HR Prompts (30 templates)
-- Job postings
-- Resume screening & scoring
-- Candidate rejection letters
-- Interview guides
-- Onboarding scripts
-
-### Marketing Prompts (40 templates)
-- Content planning
-- Social media posts
-- Landing page copy
-- A/B hypothesis generation
-- Competitor analysis
-
-### Job Seeker Prompts (25 templates)
-- Resume writing
-- Cover letters
-- Interview preparation
-- Follow-up emails
-- Salary negotiation
+**Вывод:** модель — исполнитель, а качество результата зависит от твоего промпта.
 
 ---
 
-## Channel Automation
+## Модуль 2. Формула промпта из 5 шагов
 
-Automate your content pipeline:
+Любой сильный промпт строится на пяти кирпичах:
 
-1. **Daily Post Generation** — Agent writes drafts based on content plan
-2. **Weekly Summary** — Agent analyzes performance and suggests improvements
-3. **Monthly Data Audit** — Agent verifies model prices and facts
-4. **Quarterly Audit** — Full commercial data review
+1. **Роль** — кем должна быть модель (HR, копирайтер, аналитик, менеджер)
+2. **Контекст** — ситуация, цель, ограничения
+3. **Аудитория** — кто читает, на каком языке, с каким уровнем знаний
+4. **Тон и формат** — как звучит ответ и как он выглядит (список, таблица, письмо, JSON)
+5. **Ограничения** — чего делать нельзя (запрещённые фразы, жаргон, объём)
 
----
-
-## B2B Services
-
-- AI Audit: 50,000 ₽
-- AI Implementation: 150,000–300,000 ₽
-- AI Training: from 30,000 ₽
-- License: 1,990 ₽ per employee
+**Пример:** вместо «Напиши пост» — «Ты — контент-менеджер. Напиши пост в Telegram про продуктивность с ИИ. Аудитория — владельцы маленьких компаний. Тон — дружелюбный эксперт. Формат — до 200 слов, с призывом к действию в конце. Без воды и buzzwords.»
 
 ---
 
-*Last updated: October 2026*
+## Модуль 3. Промпты под профессии
+
+В комплекте к курсу три библиотеки промптов (прилагаются отдельными PDF):
+
+• **HR:** вакансии, отбор резюме, письма кандидатам, онбординг, оценка
+• **Маркетинг:** контент-план, посты, лендинги, рекламные гипотезы, видеосценарии
+• **Поиск работы:** резюме, сопроводительное письмо, подготовка к собеседованию, нетворкинг
+
+Каждый шаблон уже содержит поля `[в скобках]` — подставь свои данные и отправь в модель.
+
+---
+
+## Модуль 4. Автоматизация
+
+• **Контент-завод:** от идеи к публикации без ручного участия
+• **Расписания и автопостинг:** Telegram, соцсети — pubblicato по плану
+• **Агенты:** как заставить ИИ работать по расписанию самому
+• **Интеграции и безопасность:** как подключать инструменты и не сливать данные
+
+Автоматизация превращает «попробовать нейросеть» в системный инструмент бизнеса.
+
+---
+
+## Модуль 5. Монетизация
+
+• **Упаковка услуг:** что и кому продавать (аудит, внедрение, обучение, контент)
+• **Воронка продаж:** от лид-магнита к платному клиенту
+• **B2B:** чек-лист аудита, цены на внедрение и обучение команд
+• **Финальный проект:** свой первый платёжный клиент
+
+---
+
+## Сколько берут за ИИ-услуги (ориентиры 2026)
+
+| Услуга | Ориентирная цена |
+|---|---|
+| AI-аудит бизнеса | от 30 000 ₽ |
+| Внедрение ИИ-процессов | 80 000–200 000 ₽ |
+| Настройка контент-завода | от 40 000 ₽ в месяц |
+| Обучение команды ИИ | от 25 000 ₽ |
+
+---
+
+## Как начать прямо сейчас
+
+1. Забери чек-лист «10 шагов к идеальному промпту» у бота **@neuropraktik_rubot** — бесплатно.
+2. Пройди все 5 модулей курса на сайте (ссылка присылается ботом после оплаты).
+3. Выполни 9 практических заданий и сдай финальный проект.
+4. Получи первый платёж — и начни монетизировать навык.
+
+**Бот курса:** @neuropraktik_rubot  
+**Курс:** НейроПрактик 2026 — от промпта до автоматизации

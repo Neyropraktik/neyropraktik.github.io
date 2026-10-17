@@ -1,153 +1,165 @@
-# Job Seeker Prompt Library — 25 Templates
+# Промпты для соискателей и карьеры — 10 шаблонов
 
-## 1. Resume Template Generator
+Библиотека готовых промптов для тех, кто ищет работу или меняет профессию. Каждый шаблон содержит поля `[в скобках]` — подставь свои данные и отправь в нейросеть.
+
+---
+
+## 1. Генератор резюме
+
 ```
-Role: Resume Writer
-Audience: Software Engineer
+Ты — профессиональный автор резюме. Составь резюме для кандидата:
 
-Create a resume for this candidate:
-Name: [NAME]
-Role: Software Engineer
+Имя: [ИМЯ]
+Должность: [ДОЛЖНОСТЬ]
 
-Include: 
-- Summary (2 lines)
-- Key projects (2-3 with metrics)
-- Skills (programming languages)
-- Experience (reverse-chronological)
-- Education (relevant only)
+Включи:
+• Резюме-заголовок (2 строки)
+• Ключевые проекты (2–3 с метриками)
+• Навыки (языки программирования / инструменты)
+• Опыт работы (обратно-хронологически)
+• Образование (только релевантное)
 
-Format: ATS-friendly, max 1 page, clean structure.
-```
-
-## 2. Cover Letter Template
-```
-Role: Career Coach
-Tone: Professional but confident
-
-Write a cover letter for [NAME] applying to [POSITION] at [COMPANY]:
-- Opening: immediate impact
-- Middle: 2-3 key achievements (match to requirements)
-- Closing: call to action
-- Format: Microsoft Word style, 250-300 words
-
-Focus on how this person's background solves their problems.
-```
-
-## 3. Interview Preparation Checklist
-```
-Role: Interview Coach
-Format: Checklist
-
-Prepare candidate [NAME] for [ROLE]:
-MUST KNOW:
-- Common behavioral questions (STAR format)
-- Technical challenges specific to role
-- Questions to ask interviewers
-
-MUST PRACTICE:
-- Elevator pitch
-- Behavioral stories
-- Technical whiteboard exercises
-
-Must include links to practice questions.
-```
-
-## 4. Salary Negotiation Guide
-```
-Role: Negotiator
-Audience: Job Candidate
-
-Write salary negotiation advice for [NAME]:
-1. How to research market rates
-2. Opening script
-3. Counter-strategy
-4. Walk-away signals
-
-Structure: Title + Introduction + Strategies + Example Script + Closing.
-```
-
-## 5. Job Application Tracker Template
-```
-Role: Career Manager
-Format: Table
-
-Create a job application tracker:
-Columns: Company, Position, Date Applied, Status, Salary, Interview Date, Follow-up Required, Notes
-
-Add filters: by company, by industry, by timeline
-
-Include automatic reminders for follow-ups after 3 days.
-```
-
-## 6. LinkedIn Profile Review
-```
-Role: LinkedIn Specialist
-Audience: Job Seeker
-
-Review [LINKEDIN_URL] and provide:
-1. Headline improvement (1 line)
-2. Summary rewrite (2-3 lines)
-3. Suggested modifications to experience descriptions
-4. Recommended posting frequency
-```
-
-## 7. Networking Email Script
-```
-Role: Networking Coach
-Tone: Brief, value-first
-
-Generate a networking email for [NAME] to [CONTACT]:
-- Subject: 1 line
-- Opening: shared connection
-- Value statement: what they can offer
-- Ask for 15-minute informational interview
-- Timing: specific dates/times
-
-Keep it under 100 words.
-```
-
-## 8. Job Search Matrix
-```
-Role: Career Advisor
-Format: Matrix
-
-Create a job search matrix for [NAME] applying for [ROLE]:
-Rows: Companies
-Columns: Salary Level, Remote Available, Growth, Requirements Met
-
-Each cell: (Company) | (Salary) | (Yes/No) | (Rating 1-5)
-
-Total 3 columns for notes per row.
-```
-
-## 9. Behavioral Interview Answers
-```
-Role: Behavioral Interview Coach
-Format: 3 STAR Stories
-
-Prepare candidate for "Tell me about a time you failed" and similar questions:
-- Situation: brief description
-- Task: specific goal
-- Action: concrete steps
-- Result: quantifiable outcome
-
-Each story: 60-80 words max.
-```
-
-## 10. Reference Request Templates
-```
-Role: Candidate
-Audience: Former Manager
-
-Prepare reference request emails for these relationships:
-- Direct reports
-- Peers
-- Subordinates
-- Vendors/clients
-
-Each email: context, date, type of information needed.
+Ограничение: ATS-дружелюбный формат, до 1 страницы, чистая структура.
 ```
 
 ---
 
-> **Tip:** Always include context, audience, tone, format, and constraints in your prompts for consistent results.
+## 2. Сопроводительное письмо
+
+```
+Ты — карьерный коуч. Напиши сопроводительное письмо для [ИМЯ], который претендует на должность [ДОЛЖНОСТЬ] в компании [КОМПАНИЯ].
+
+• Вступление: мгновенный эффект
+• Основная часть: 2–3 ключевых достижения, сопоставь с требованиями вакансии
+• Заключение: призыв к действию
+
+Формат: деловой документ, 250–300 слов. Сфокусируйся на том, как опыт этого человека решает проблемы работодателя.
+```
+
+---
+
+## 3. Подготовка к собеседованию
+
+```
+Ты — коуч по собеседованиям. Подготовь кандидата [ИМЯ] к собеседованию на должность [ДОЛЖНОСТЬ].
+
+ОБЯЗАТЕЛЬНО ЗНАТЬ:
+• Типичные поведенческие вопросы (формат STAR)
+• Технические задачи, специфичные для роли
+• Вопросы, которые стоит задавать интервьюеру
+
+ОБЯЗАТЕЛЬНО ПОТРЕНИРОВАТЬ:
+• Презентация себя (elevator pitch)
+• Поведенческие истории
+• Технические задачи на доске
+
+Добавь ссылки на задачи для практики.
+```
+
+---
+
+## 4. Переговоры по зарплате
+
+```
+Ты — переговорщик. Напиши рекомендации по переговорам о зарплате для кандидата [ИМЯ] на позицию [ДОЛЖНОСТЬ].
+
+1. Как исследовать рыночные ставки
+2. Скрипт открытия переговоров
+3. Контра-стратегия на встречное предложение
+4. Сигналы, когда стоит уйти
+
+Структура: заголовок + введение + стратегии + пример скрипта + завершение.
+```
+
+---
+
+## 5. Трекер откликов на вакансии
+
+```
+Ты — карьерный менеджер. Создай таблицу-тррекер откликов на вакансии.
+
+Колонки: Компания, Должность, Дата отклика, Статус, Зарплата, Дата собеседования, Нужно ли напоминание, Примечания.
+
+Добавь фильтры: по компании, по отрасли, по срокам.
+Включи автоматические напоминания о follow-up через 3 дня после отклика.
+```
+
+---
+
+## 6. Ревью профиля LinkedIn
+
+```
+Ты — специалист по LinkedIn. Проанализируй профиль [ССЫЛКА] и предложи:
+
+1. Улучшение заголовка (1 строка)
+• Перепись резюме (about, 2–3 строки)
+• Предложения по изменениям в описании опыта
+• Рекомендуемая частота постов
+```
+
+---
+
+## 7. Нетворкинг-письмо
+
+```
+Ты — коуч по нетворкингу. Напиши короткое письмо с запросом на знакомство от [ИМЯ] к [КОНТАКТ].
+
+• Тема: 1 строка
+• Вступление: общая связь или контекст
+• Ценностное предложение: что ты можешь предложить
+• Просьба о 15-минутной информационной встрече
+• Конкретные даты/время
+
+Объём: до 100 слов. Тон — краткий, ценностный.
+```
+
+---
+
+## 8. Матрица поиска работы
+
+```
+Ты — карьерный консультант. Составь матрицу поиска работы для [ИМЯ], который претендует на должность [ДОЛЖНОСТЬ].
+
+Строки: компании
+Столбцы: уровень зарплаты, удалёнка, рост, соответствие требованиям
+
+Каждая ячейка: (Компания) | (Зарплата) | (Да/Нет) | (Оценка 1–5)
+Добавь 3 колонки для заметок по каждой строке.
+```
+
+---
+
+## 9. Поведенческие ответы на собеседовании
+
+```
+Ты — коуч по поведенческим собеседованиям. Подготовь 3 истории по формату STAR на вопросы: «Расскажи о случае, когда ты потерпел неудачу» и аналогичные.
+
+• Situation: краткое описание
+• Task: конкретная цель
+• Action: конкретные шаги
+• Result: измеримый результат
+
+Каждая история: до 60–80 слов.
+```
+
+---
+
+## 10. Шаблоны запроса рекомендаций
+
+```
+Ты — кандидат. Подготовь письма-запросы рекомендаций для разных отношений:
+
+• Прямые подчинённые
+• Коллеги по цеху
+• Бывшие руководители
+• Клиенты / подрядчики
+
+Каждое письмо: контекст, дата, какая информация нужна, срок ответа, контакт.
+Тон: вежливый, профессиональный.
+```
+
+---
+
+> Совет: всегда добавляй контекст, аудиторию, тон, формат и ограничения в свои промпты — тогда результат будет стабильным.
+
+Бот курса: @neuropraktik_rubot

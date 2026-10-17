@@ -1,157 +1,174 @@
-# Marketing Prompt Library — 40 Templates
+# Промпты для маркетинга и контента — 10 шаблонов
 
-## 1. Content Plan Generator
+Библиотека готовых промптов для контент-менеджеров, SMM-специалистов и копирайтеров. Каждый шаблон содержит поля `[в скобках]` — подставь свои данные и отправь в нейросеть.
+
+---
+
+## 1. Контент-план на месяц
+
 ```
-Role: Marketing Strategist
-Audience: Content Manager
+Ты — маркетинговый стратег. Составь контент-план на 30 дней для канала [КАНАЛ / СОЦСЕТЬ].
 
-Generate a 30-day content plan:
-Industry: [INDUSTRY]
-Target Audience: [PERSONA]
-Channels: [TELEGRAM / LINKEDIN / INSTAGRAM / BLOG]
+Отрасль: [ОТРАСЛЬ]
+Целевая аудитория: [ПЕРСОНА]
+Каналы: [TELEGRAM / VK / YANDEX.DZEN / РУТУБ / ВК]
 
-Format each day:
-- Rubric: (Educational, Case Study, Promotion, Behind-the-Scenes, Community)
-- Topic
-- Hook
-- CTA
+Формат каждого дня:
+• Рубрика (Обучающий пост / Кейс / Продвижение / Закулисье / Сообщество)
+• Тема
+• Хуки (заголовок, который цепляет)
+• CTA (призыв к действию)
 
-No promotional posts for first 10 days. Focus on value.
-```
-
-## 2. Social Media Post Generator
-```
-Role: Social Media Manager
-Tone: Engaging, value-first
-
-Write a Telegram/Live post based on this content:
-[CONTENT]
-
-Constraints:
-- Max 300 words
-- At least one question for audience
-- One emoji maximum
-- Clear takeaway action
-
-Format: Bold header, body paragraphs, CTA at the end.
-```
-
-## 3. Carousel Script Template
-```
-Role: Content Creator
-Audience: Instagram Carousel
-
-Create a 7-slide carousel script titled "[TITLE]":
-Slide 1: Hook + problem statement
-Slide 2-5: Solutions (one per slide)
-Slide 6: Case study / example
-Slide 7: Takeaway + CTA
-
-Each slide: max 40 words. No lists.
-```
-
-## 4. Landing Page Copy Generator
-```
-Role: Copywriter
-Audience: Landing Page Designer
-
-Write landing page copy for [PRODUCT/SERVICE]:
-- Headline (max 8 words)
-- Subheadline (max 20 words)
-- Pain Points (3 bullet points)
-- Solution Benefits (3 benefits)
-- Social Proof / Data
-- CTA: "Get [Product] now" or "Book a call"
-
-Tone: Benefit-focused, no fluff. Include price anchor if applicable.
-```
-
-## 5. Email Subject Line Generator
-```
-Role: Email Marketer
-Format: Table with 10 subject lines
-
-Generate 10 email subject lines for:
-Topic: [TOPIC]
-Audience: [AUDIENCE]
-
-Constraints:
-- Max 45 characters
-- Mix of curiosity, benefit, urgency
-- No clickbait
-- Clear expectation of content
-```
-
-## 6. A/B Hypothesis Generator
-```
-Role: Growth Marketer
-Format: 6 A/B test hypotheses
-
-Generate 6 A/B hypotheses for improving [METRIC] on [PLATFORM]:
-For each: variant idea, expected impact %, effort level (low/medium/high)
-
-Focus on: headlines, CTAs, social proof, pricing presentation, form length
-```
-
-## 7. Competitor Analysis Template
-```
-Role: Marketing Analyst
-Audience: Team
-
-Analyze competitor [COMPETITOR_URL]:
-1. Value proposition (their headline + your counter)
-2. Pricing model (compare with yours)
-3. Content strategy (channels, posting frequency)
-4. Customer engagement (comments, response quality)
-5. Weak spots you can exploit
-
-Present in a table format.
-```
-
-## 8. Blog Post Outline Generator
-```
-Role: Editor
-Audience: Content Writer
-
-Create a blog post outline on "[TOPIC]" for [AUDIENCE]:
-- Working title
-- Target word count
-- 5-7 H2 sections
-- For each section: 2-3 key points
-- Target keywords
-- Expected outcome: [CONVERSION GOAL]
-```
-
-## 9. Video Script Generator
-```
-Role: Video Editor
-Audience: YouTube/TikTok Creator
-
-Write a 60-second video script on "[TOPIC]":
-- Hook (first 3 seconds)
-- Problem (next 10 seconds)
-- Solution (next 25 seconds)
-- Proof (next 15 seconds)
-- CTA (last 10 seconds)
-
-Use conversational tone. No jargon.
-```
-
-## 10. Case Study Template
-```
-Role: Content Marketer
-Format: Problem → Solution → Results
-
-Create a case study:
-Client: [CLIENT OR ANONYMOUS]
-Challenge: [BRIEF DESCRIPTION]
-Our Process: [STEPS TAKEN]
-Results: [MEASURABLE OUTCOMES]
-Lessons Learned: [1-2 INSIGHTS]
-
-Format as a professional writeup with metrics, max 800 words.
+Первые 10 дней — без прямой рекламы, только ценность для аудитории.
+Формат: таблица с колонками «День | Рубрика | Тема | Хук | CTA».
 ```
 
 ---
 
-> **Tip:** Use `### VARIANT B ###` marker in posts to enable A/B testing in the publishing pipeline.
+## 2. Пост в соцсети
+
+```
+Ты — SMM-менеджер. Напиши пост в [TELEGRAM / VK] на основе этого материала:
+
+[МАТЕРИАЛ / ИДЕЯ]
+
+Ограничения:
+• До 300 слов
+• Минимум один вопрос аудитории
+• Не более одного эмодзи
+• Чёткий вывод и действие в конце
+
+Формат: жирный заголовок, абзацы, CTA в конце. Тон — вовлекающий, ценностный.
+```
+
+---
+
+## 3. Скрипт карусели
+
+```
+Ты — креативный продюсер. Составь скрипт карусели на 7 слайдов под заголовок "[НАЗВАНИЕ]".
+
+Слайд 1: хук + формулировка проблемы
+Слайды 2–5: по одному решению на слайд
+Слайд 6: кейс / пример из практики
+Слайд 7: вывод + CTA
+
+Ограничение: до 40 слов на слайд, без списков.
+Тон: лаконичный, визуальный.
+```
+
+---
+
+## 4. Текст для лендинга
+
+```
+Ты — копирайтер. Напиши текст Landing Page для продукта / услуги [ПРОДУКТ].
+
+Включи:
+• Заголовок (до 8 слов)
+• Сабтиттл (до 20 слов)
+• 3 болячки клиента (буллеты)
+• 3 выгоды решения (буллеты)
+• Социальное доказательство / цифры
+• CTA: «Получить [ПРОДУКТ]» или «Записаться на консультацию»
+
+Тон: ориентирован на выгоду, без воды. Ценовой якорь, если применимо.
+```
+
+---
+
+## 5. Тема письма (email-маркетинг)
+
+```
+Ты — email-маркетолог. Сгенерируй 10 тем писем для рассылки по теме [ТЕМА].
+
+Аудитория: [АУДИТОРИЯ]
+Ограничения:
+• До 45 символов
+• Микс из любопытства, выгоды, срочности
+• Без кликбейта
+• Чёткое представление о содержимом
+
+Формат: таблица с колонками «Тема | Подход | Эффект».
+```
+
+---
+
+## 6. A/B-гипотезы
+
+```
+Ты — growth-маркетолог. Сгенерируй 6 гипотез A/B-тестов для улучшения метрики [МЕТРИКА] на платформе [ПЛАТФОРМА].
+
+Для каждой: идея варианта, ожидаемое влияние (%), уровень усилий (низкий / средний / высокий).
+Фокус: заголовки, CTA, социальное доказательство, подача цены, длина формы.
+Формат: список с пометками.
+```
+
+---
+
+## 7. Анализ конкурентов
+
+```
+Ты — маркетинговый аналитик. Проанализируй конкурента [ССЫЛКА / НАЗВАНИЕ]:
+
+1. Торговое предложение (их заголовок + твой контраргумент)
+2. Модель ценообразования (сравни с твоей)
+3. Контент-стратегия (каналы, частота публикаций)
+4. Вовлечение клиентов (комментарии, качество ответов)
+5. Слабые места, которые можно использовать
+
+Представь в табличном виде.
+```
+
+---
+
+## 8. Скрипт видео
+
+```
+Ты — видеоредактор. Напиши сценарий 60-секундного видео на тему "[ТЕМА]" для [YOUTUBE / TIKTOK / РУТУБ].
+
+• Хук (первые 3 секунды)
+• Проблема (следующие 10 секунд)
+• Решение (следующие 25 секунд)
+• Доказательство (следующие 15 секунд)
+• CTA (последние 10 секунд)
+
+Тон: разговорный, без жаргона.
+```
+
+---
+
+## 9. Кейс
+
+```
+Ты — контент-маркетолог. Составь кейс по схеме Проблема → Решение → Результат.
+
+Клиент: [КЛИЕНТ или АНОНИМНО]
+Проблема: [КРАТКОЕ ОПИСАНИЕ]
+Наш процесс: [ЭТАПЫ РАБОТЫ]
+Результат: [ИЗМЕРЯЕМЫЙ ИТОГ]
+Уроки: [1–2 инсайта]
+
+Формат: профессиональный очерк с цифрами, до 800 слов.
+```
+
+---
+
+## 10. Ролик / Shorts / Реels сценарий
+
+```
+Ты — автор коротких видео. Напиши сценарий вертикального видео 45 секунд для [RUTUBE SHORTS / VK CLIPS / YOUTUBE SHORTS] на тему "[ТЕМА]".
+
+• Хук (0–3 сек): вопрос или удивление
+• Основная ценность (3–35 сек): 3 постулата
+• Доказательство (35–40 сек): цифра или пример
+• CTA (40–45 сек): подписка / переход в профиль
+
+Тон: быстрый, энергичный, без введения «здравствуйте, сегодня я расскажу».
+```
+
+---
+
+> Совет: используй маркер `### ВАРИАНТ Б ###` в постах, чтобы бот и система публикации могли запускать A/B-тесты.
+
+Бот курса: @neuropraktik_rubot

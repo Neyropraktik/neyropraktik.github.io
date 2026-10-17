@@ -1,39 +1,40 @@
-# Checklist: 10 Steps to an Ideal Prompt
+# Чек-лист «10 шагов к идеальному промпту»
 
-## The Essential Checklist
+Печатай эту страницу и держи перед глазами. Пройдись по 10 пунктам перед каждой отправкой в нейросеть — и сэкономишь часы на доработках.
 
-Print this one-page checklist and keep it at your desk. One pass prevents poor AI output.
+| [x] | Шаг | Что проверить |
+|---|-----|---------------|
+| [ ] | 1. Роль | Кем должна быть модель? (аналитик, HR-менеджер, редактор, маркетолог, эксперт) |
+| [ ] | 2. Контекст | Какая ситуация, цель и ограничения? |
+| [ ] | 3. Аудитория | Кто будет читать? Уровень, язык, боли, ожидания |
+| [ ] | 4. Тон | Деловой, дружелюбный, экспертный, продающий? Одно слово задаёт тон. |
+| [ ] | 5. Формат | Список, таблица, письмо, JSON, пост? Пропиши явно. |
+| [ ] | 6. Объём | «200 слов», «3 абзаца», «одна таблица» — без этого модель догонит сама. |
+| [ ] | 7. Ограничения | Чего НЕ должно быть? Запрещённые фразы, жаргон, ссылки, имена. |
+| [ ] | 8. Данные | Давай только существенное. Не выгружай всю базу — только пример. |
+| [ ] | 9. Уточнения | Спроси у модели: «Что ещё нужно знать?» — добавь ветки «если...» |
+| [ ] | 10. Проверка фактов | Попроси проверить 3 факта и указать источники — модель реже ошибается |
 
-| ✓ | Step | What to Check |
-|---|------|---------------|
-| 1 | **Role** | Who should the model be? (analyst, expert, editor) |
-| 2 | **Context** | What's the situation, goal, and constraints? |
-| 3 | **Audience** | Who needs to understand this? Language, level, concerns |
-| 4 | **Tone** | Formal, casual, academic, marketing? One word specifies. |
-| 5 | **Format** | List, essay, table, JSON, email? Spell it out. |
-| 6 | **Volume** | How long? "200 words", "3 bullet points", "one paragraph" |
-| 7 | **Constraints** | What must NOT appear? Forbidden phrases, jargon, links |
-| 8 | **Data** | Give only what matters. Don't dump your entire base. |
-| 9 | **Clarifications** | Ask: "Should I elaborate?" → Add "if..." branches |
-| 10 | **Fact-check** | Request: "Verify 3 facts" — model will cite sources |
+## Быстрая помощь: результат слабый?
+Задай себе 3 вопроса:
+1. Какая конкретная информация отсутствует в промпте?
+2. Перепиши с жёсткими ограничениями.
+3. Что добавил бы senior-специалист на моём месте?
 
-## Quick Fix: 3 Questions When Output is Weak
+## До / После
 
-1. "What specific information is missing?"
-2. "Re-write with explicit constraints."
-3. "What would a senior expert add?"
+**До:** «Напиши пост про продуктивность»
 
-## Before/After Example
-
-**Before:** "Write a post about productivity"
-
-**After:** "**Role:** LinkedIn Content Manager **Audience:** HR managers **Tone:** Professional, actionable **Format:** LinkedIn post, 300 words max **Constraints:** No buzzwords, concrete steps only **Context:** Discuss AI tools for productivity improvement in 2026"
+**После:** «Ты — контент-менеджер LinkedIn. Напиши пост про продуктивность с помощью ИИ-инструментов в 2026 году. Аудитория — руководители отделов и HR. Тон — деловой, без воды. Формат — пост LinkedIn, до 300 слов, с хештегами в конце. Без buzzwords («синергия», «дисрупция»), только конкретные шаги.»
 
 ---
 
-### How to Use
+## Как пользоваться
 
-1. Print this sheet
-2. Run through every prompt
-3. Save 30+ minutes per week on iteration fixes
-4. Share this checklist with your team
+1. Распечатай этот лист.
+2. Прогоняй каждый промпт через 10 пунктов.
+3. Сохраняй 30+ минут в неделю на доработках.
+4. Перешли коллегам — пусть работают быстрее.
+
+Бот курса: @neuropraktik_rubot
+Курс «НейроПрактик 2026»: 5 модулей, 17 уроков, 9 заданий, 5 тестов.

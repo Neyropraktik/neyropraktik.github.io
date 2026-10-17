@@ -1,124 +1,164 @@
-# HR Prompt Library — 30 Templates
+# Промпты для HR и рекрутинга — 10 шаблонов
 
-## 1. Job Posting Template
+Библиотека готовых промптов для отдела кадров и рекрутеров. Каждый шаблон содержит поля `[в скобках]` — подставь свои данные и отправь в нейросеть.
+
+---
+
+## 1. Вакансия
+
 ```
-Role: [Position Title]
-Company: [Company Name]
-Audience: [Seniority level]
+Ты — HR-менеджер с опытом 5+ лет. Напиши привлекательную вакансию на должность [ДОЛЖНОСТЬ] в компании [КОМПАНИЯ].
 
-Create a job posting for [Position] at [Company]. The post should be clear, appealing, and highlight growth opportunities. Include: responsibilities, requirements, nice-to-have skills, and next steps. Tone: professional but human, no buzzwords.
-```
+Включи в текст:
+• О компании (2-3 предложения)
+• Основные обязанности (5-7 пунктов)
+• Требования к кандидату (обязательные и желательные)
+• Условия и benefits
+• Как откликнуться (контакт или ссылка)
 
-## 2. Resume Screening
-```
-Role: HR Recruiter
-Audience: Candidate
-
-Screen this resume against the job requirements:
-[LIST REQUIREMENTS]
-
-Score each requirement 0-10. Provide final go/no-go recommendation with brief rationale.
-```
-
-## 3. Score Matching Sheet
-```
-Role: HR Recruiter
-Format: Table
-
-Create a scoring table matching candidate skills to job requirements. Each cell gets a score 0-10. Include total score, percentage match, and readiness level (ready/somewhat/not-ready).
-
-Candidate: [NAME]
-Requirements:
-[LIST]
-```
-
-## 4. Rejection Letter
-```
-Role: HR Manager
-Tone: Empathetic but professional
-
-Write a rejection email for a candidate who was close but not selected:
-Candidate: [NAME]
-Position: [POSITION]
-Feedback: [BRIEF]
-
-Keep it short, sincere, and leave door open for future roles.
-```
-
-## 5. Invitation to Interview
-```
-Role: HR Coordinator
-Tone: Friendly, professional
-
-Draft an interview invitation email:
-- Confirmed time/date
-- Video link or address
-- Required documents to bring
-- What to expect in the interview
-```
-
-## 6. Interview Guide
-```
-Role: Hiring Manager
-Audience: Interviewer
-
-Create interview questions for [ROLE]:
-1. Technical assessment
-2. Behavioral questions (STAR format)
-3. Culture-fit questions
-4. Candidate questions to ask
-
-Each question should test a specific competency.
-```
-
-## 7. Welcome Onboarding Email
-```
-Role: HR Manager
-Tone: Warm, excited
-
-Create a welcome email sent after a candidate accepts the offer:
-- First day details
-- What to bring
-- Introductions to team
-- Resources and documentation
-```
-
-## 8. Onboarding Checklist
-```
-Role: HR Coordinator
-Format: Checklist
-
-Generate a 30-day onboarding checklist for a new [ROLE]:
-Week 1: Administrative, tools access
-Week 2: Role-specific training
-Week 3: Projects, feedback sessions
-Week 4: Goals setting, integration check
-```
-
-## 9. Reference Request Template
-```
-Role: Recruiter
-Audience: Former Manager
-
-Write a professional reference request email:
-- Candidate's name and role
-- Specific questions we need answered
-- Deadline for response
-- Contact information
-```
-
-## 10. Job Description (Lean Version)
-```
-Role: Hiring Manager
-Audience: Candidates
-
-Write a concise job description focusing on impact and growth:
-- 3 key responsibilities (not 10)
-- 3 essential skills
-- 1 growth opportunity
-- Why someone should join us
+Тон: дружелюбный, профессиональный, без канцелярита и buzzwords.
+Формат: структура с заголовками и маркерами.
+Объём: до 400 слов.
 ```
 
 ---
 
-> **Tip:** Use the 5-Step Prompt Formula. Always specify role, audience, tone, format, and constraints.
+## 2. Отбор резюме
+
+```
+Ты — HR-рекрутер. Пройдись по резюме кандидата и сравни его с требованиями к вакансии.
+
+Требования к вакансии:
+[ТРЕБОВАНИЯ]
+
+Резюме кандидата:
+[РЕЗЮМЕ]
+
+Дай оценку по каждому требованию по шкале 0–10. Вынеси итоговый балл и процент соответствия. Сделай рекомендацию: пригласить на собеседование / пригласить с оговорками / отказать. Обоснуй решение 2-3 предложениями.
+Формат: таблица + краткий вердикт.
+```
+
+---
+
+## 3. Письмо с отказом кандидату
+
+```
+Ты — HR-менеджер. Напиши вежливое письмо с отказом кандидату [ИМЯ] на позицию [ДОЛЖНОСТЬ].
+
+Условия: кандидат прошёл собеседование, но нам подошёл другой человек. Тон — искренний, Profesссиональный, без лишней жалости. Оставь дверь открытой для будущих вакансий.
+
+Формат: деловой email, до 150 слов.
+```
+
+---
+
+## 4. Приглашение на собеседование
+
+```
+Ты — HR-координатор. Напиши письмо-приглашение на собеседование кандидату [ИМЯ] на должность [ДОЛЖНОСТЬ].
+
+Включи:
+• Дату, время и формат (онлайн/офлайн, ссылка или адрес)
+• С кем будет собеседование и что ожидать
+• Какие документы взять с собой
+• Контакт для вопросов
+
+Тон: дружелюбный, деловой. Объём: до 120 слов.
+```
+
+---
+
+## 5. Гид по собеседованию (вопросы)
+
+```
+Ты — hiring manager для роли [ДОЛЖНОСТЬ]. Составь скрипт собеседования из 8 вопросов:
+
+1. Два вопроса поhard skills (техническим навыкам)
+2. Два вопроса по soft skills (коммуникации, работа в команде)
+2. Два поведенческих вопроса (формат STAR)
+2. Вопросы, которые может задать кандидат
+
+Для каждого вопроса укажи, на какой навык он направлен и какой ответ считается хорошим.
+Формат: нумерованный список с пометками.
+```
+
+---
+
+## 6. Письмо приветствия (онбординг)
+
+```
+Ты — HR-менеджер. Напиши приветственное письмо новому сотруднику [ИМЯ], который начинает работу на должности [ДОЛЖНОСТЬ] с [ДАТА].
+
+Включи:
+• Приветствие и радость о сотрудничестве
+• Детали первого дня (время, адрес, ссылка на созвон, что взять)
+• Кто его встретит и познакомит с командой
+• Где найти внутренние документы и ресурсы
+
+Тон: тёплый, welcoming. Объём: до 180 слов.
+```
+
+---
+
+## 7. Чек-лист онбординга на 30 дней
+
+```
+Ты — HR-координатор. Составь чек-лист онбординга на первый месяц для нового сотрудника на должности [ДОЛЖНОСТЬ].
+
+Разбей по неделям:
+• Неделя 1: администрирование, доступы к инструментам, знакомство с командой
+• Неделя 2: обучение процессам и внутренним регламентам
+• Неделя 3: первые задачи, обратная связь от ментора
+• Неделя 4: постановка целей, итоговая встреча
+
+Каждый пункт — одно действие. Формат: чек-лист с галочками [ ].
+```
+
+---
+
+## 8. Запрос рекомендаций
+
+```
+Ты — рекрутер. Напиши письмо-запрос рекомендаций бывшему руководителю кандидата [ИМЯ], который работал на должности [ДОЛЖНОСТЬ].
+
+Включи:
+• Кто такой кандидат и на какую позицию претендует
+• Конкретные вопросы (надёжность, сильные стороны, зоны роста, причина ухода)
+• Срок ответа и контакт для связи
+
+Тон: деловой, краткий. Объём: до 120 слов.
+```
+
+---
+
+## 9. Краткое описание должности (job description)
+
+```
+Ты — hiring manager. Напиши краткое job description для позиции [ДОЛЖНОСТЬ] в компании [КОМПАНИЯ].
+
+Включи:
+• 3 ключевые обязанности (не более трёх)
+• 3 обязательных навыка
+• 1 возможность роста для сотрудника
+• Почему стоит к нам присоединиться (одно предложение)
+
+Тон: сфокусирован на влияние и росте, без воды. Объём: до 150 слов.
+```
+
+---
+
+## 10. Оценка кандидата (таблица)
+
+```
+Ты — HR-аналитик. Оцени кандидата [ИМЯ] по позициям [ДОЛЖНОСТЬ] по критериям:
+
+[СПИСОК КРИТЕРИЕВ]
+
+Построй таблицу: критерий | оценка 1–5 | комментарий. Добавь итоговый средний балл и рекомендацию (нанимаем / не нанимаем / нужно дополнительное собеседование).
+```
+
+---
+
+> Совет: используй 5-шаговую формулу (роль, контекст, аудитория, тон, ограничения), если хочешь изменить любой шаблон под свою компанию.
+
+Бот курса: @neuropraktik_rubot
