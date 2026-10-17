@@ -5,7 +5,7 @@
 Возможности:
   /start      — приветствие и меню
   /catalog    — 4 тарифа курса с ценами
-  /buy        — выбор тарифа и оплаты (Telegram Stars или перевод)
+  /buy        — выбор тарифа и оплаты (Telegram Stars, Boosty или перевод)
   /faq        — частые вопросы
   /orders     — история заказов (только для админа)
   /grant      — (админ) выдать доступ по номеру заказа: /grant NP-1234567
@@ -359,17 +359,20 @@ def send_catalog(token: str, chat_id) -> None:
     send(token, chat_id, catalog_text(), keyboard)
 
 
-def send_payment_choice(token: str, chat_id, tier_id: str) -> None:
+def send_payment_choice(token: str, env: dict, chat_id, tier_id: str) -> None:
     tier = next((t for t in TIERS if t["id"] == tier_id), None)
     if not tier:
         return
-    keyboard = {"inline_keyboard": [
+    rows = [
         [{"text": f"⭐ Telegram Stars ({tier['stars']:,})".replace(",", " "),
           "callback_data": f"pay_stars:{tier_id}"}],
-        [{"text": "💳 Переводом", "callback_data": f"pay_manual:{tier_id}"}],
-        [{"text": "‹ Назад к тарифам", "callback_data": "catalog"}],
-    ]}
-    send(token, chat_id, payment_choice_text(tier), keyboard)
+    ]
+    if env.get("BOOSTY_URL"):
+        rows.append([{"text": "💜 Картой или СБП на Boosty",
+                      "callback_data": f"pay_boosty:{tier_id}"}])
+    rows.append([{"text": "💳 Переводом", "callback_data": f"pay_manual:{tier_id}"}])
+    rows.append([{"text": "‹ Назад к тарифам", "callback_data": "catalog"}])
+    send(token, chat_id, payment_choice_text(tier), {"inline_keyboard": rows})
 
 
 def send_stars_invoice(token: str, env: dict, chat_id, tier_id: str) -> None:
@@ -391,11 +394,8 @@ def send_stars_invoice(token: str, env: dict, chat_id, tier_id: str) -> None:
              {"inline_keyboard": [[{"text": "✍️ Написать менеджеру", "url": manager_url(env)}]]})
 
 
-def start_manual_payment(token: str, env: dict, chat_id, tier_id: str,
-                         user: dict | None = None) -> None:
-    tier = next((t for t in TIERS if t["id"] == tier_id), None)
-    if not tier:
-        return
+def create_waiting_order(chat_id, tier: dict, user: dict | None = None,
+                         channel: str = "manual") -> dict:
     user = user or {}
     orders = load_json(ORDERS_FILE, [])
     order = {
@@ -404,12 +404,22 @@ def start_manual_payment(token: str, env: dict, chat_id, tier_id: str,
         "tier": tier["id"],
         "amount_rub": tier["price_rub"],
         "status": "waiting_payment",
+        "channel": channel,
         "username": user.get("username", ""),
         "name": " ".join(x for x in (user.get("first_name"), user.get("last_name")) if x),
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     orders.append(order)
     save_json(ORDERS_FILE, orders)
+    return order
+
+
+def start_manual_payment(token: str, env: dict, chat_id, tier_id: str,
+                         user: dict | None = None) -> None:
+    tier = next((t for t in TIERS if t["id"] == tier_id), None)
+    if not tier:
+        return
+    order = create_waiting_order(chat_id, tier, user, channel="manual")
     manual_text = env.get("PAYMENT_MANUAL_TEXT", "Оплата переводом: напишите менеджеру — пришлём реквизиты.")
     price = f"{order['amount_rub']:,}".replace(",", " ")
     keyboard = {"inline_keyboard": [
@@ -432,6 +442,38 @@ def start_manual_payment(token: str, env: dict, chat_id, tier_id: str,
              f"Тариф: {tier['title']} ({price} ₽)\n"
              f"Покупатель: {who} · chat_id={chat_id}\n"
              "Статус: ждём оплату переводом. Когда пришлёт чек — придёт кнопка «выдать доступ».")
+
+
+def start_boosty_payment(token: str, env: dict, chat_id, tier_id: str,
+                         user: dict | None = None) -> None:
+    tier = next((t for t in TIERS if t["id"] == tier_id), None)
+    boosty = (env.get("BOOSTY_URL") or "").rstrip("/")
+    if not tier or not boosty:
+        start_manual_payment(token, env, chat_id, tier_id, user)
+        return
+    order = create_waiting_order(chat_id, tier, user, channel="boosty")
+    price = f"{order['amount_rub']:,}".replace(",", " ")
+    keyboard = {"inline_keyboard": [
+        [{"text": "💜 Оплатить на Boosty", "url": boosty}],
+        [{"text": "✍️ Написать менеджеру", "url": manager_url(env)}],
+    ]}
+    send(token, chat_id,
+         f"<b>Заказ {order['order_id']}</b>\nТариф «{tier['title']}» — {price} ₽\n\n"
+         "Оплата на Boosty: картой, СБП или другим способом, доступным на Boosty.\n\n"
+         "<b>Как получить доступ:</b>\n"
+         "1. Нажмите «💜 Оплатить на Boosty» и оплатите курс.\n"
+         "2. Вернитесь в этот чат и отправьте фото или скриншот оплаты.\n"
+         "3. Проверю — и доступ откроется здесь же: файлы и ссылка на уроки.\n\n"
+         "Boosty-подписка также открывает платные посты с разборами.",
+         keyboard)
+    admin = env.get("ADMIN_CHAT_ID")
+    if admin:
+        who = f"@{order['username']}" if order["username"] else (order["name"] or "без имени")
+        send(token, admin,
+             f"🧾 Новый заказ {order['order_id']} (Boosty)\n"
+             f"Тариф: {tier['title']} ({price} ₽)\n"
+             f"Покупатель: {who} · chat_id={chat_id}\n"
+             "Ждём оплату на Boosty — чек придёт кнопкой «выдать доступ».")
 
 
 def deliver(token: str, env: dict, chat_id, tier_id: str, charge_id: str = "",
@@ -704,9 +746,11 @@ def handle_update(env: dict, update: dict) -> None:
         elif data == "faq":
             send_faq(token, env, chat_id)
         elif data.startswith("tier:"):
-            send_payment_choice(token, chat_id, data.split(":", 1)[1])
+            send_payment_choice(token, env, chat_id, data.split(":", 1)[1])
         elif data.startswith("pay_stars:"):
             send_stars_invoice(token, env, chat_id, data.split(":", 1)[1])
+        elif data.startswith("pay_boosty:"):
+            start_boosty_payment(token, env, chat_id, data.split(":", 1)[1], cb.get("from"))
         elif data.startswith("pay_manual:"):
             start_manual_payment(token, env, chat_id, data.split(":", 1)[1], cb.get("from"))
         elif data.startswith("grant:"):
@@ -730,7 +774,7 @@ def handle_update(env: dict, update: dict) -> None:
         elif payload in ("buy", "catalog", "course"):
             send_catalog(token, chat_id)
         elif payload.startswith("buy_"):
-            send_payment_choice(token, chat_id, payload[4:])
+            send_payment_choice(token, env, chat_id, payload[4:])
         elif payload == "program":
             send_program(token, env, chat_id)
         elif payload == "faq":
