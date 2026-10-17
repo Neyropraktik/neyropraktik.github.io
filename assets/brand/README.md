@@ -31,8 +31,9 @@
 |---|---|---|
 | `banner.jpg` | баннер канала (1280×480) | соцпревью сайта (og:image), обложки постов (`publish.py --photo`) |
 | `avatar.png` | аватар (квадрат ≥512×512) | аватар канала (`setup_channel.py --avatar`) |
-| `boosty-cover.png` | обложка Boosty (1920×240) | страница Boosty (`content/boosty-page.md`) |
-| `boosty-avatar.png` | аватар Boosty (450×450, безопасен для круга) | страница Boosty |
+| `boosty-cover.png` | обложка Boosty (1920×480, безопасные зоны под кроп) | страница Boosty (`content/boosty-page.md`) |
+| `boosty-avatar.png` | аватар Boosty (620×620, логотип из Telegram-канала) | страница Boosty |
+| `bundle-course.png` | обложка бандла «Курс НейроПрактик 2026» (1280×720) | бандл на Boosty |
 
 Положи файлы с именами выше — дальше всё цепляется автоматически:
 - `index.html` уже ссылается на `banner.jpg` в `og:image`;
