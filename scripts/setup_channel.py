@@ -17,6 +17,13 @@ import urllib.request
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
+
+# Провайдеры могут блокировать часть IP Telegram — см. bot/telegram_net.py
+sys.path.insert(0, str(BASE_DIR / "bot"))
+from telegram_net import init_telegram_net  # noqa: E402
+
+init_telegram_net()
+
 API = "https://api.telegram.org/bot{token}/{method}"
 
 # Бренд см. assets/brand/README.md: неон-маджента, теглайн «ИИ • Идеи • Практика • Результат»

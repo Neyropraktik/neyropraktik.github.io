@@ -10,6 +10,7 @@ kurs/                   Страницы программы и 5 модулей
 assets/css, assets/js   Дизайн-система и 3D-поведение (+ course.css/course.js)
 assets/brand/, img/     Бренд-книжка, баннер/аватар канала, фавикон
 bot/tg_bot.py           Telegram-бот: каталог, оплата, выдача доступа
+bot/telegram_net.py     Автоподбор рабочего IP Telegram API (обход блокировок провайдера)
 scripts/                publish.py (посты в канал), setup_channel.py, build_pdf.py
 products/, pdf/         Исходники и собранные PDF-материалы
 content/                Markdown-исходники курса, закреп и посты канала
@@ -52,6 +53,7 @@ python3 bot/tg_bot.py
 - Меню: теглайн-брендинг, кнопка «💜 Boosty — посты и разборы» (появляется при заполненном `BOOSTY_URL`)
 - Оплата: Telegram Stars (XTR) или перевод; после оплаты бот присылает доступ и PDF-материалы
 - Заказы: `bot/orders.json`; `/orders` — для админа
+- **Обход блокировок**: некоторые провайдеры блокируют часть IP-адресов Telegram — `bot/telegram_net.py` при старте проверяет штатный маршрут и при необходимости подключается через резервный IP, а после серии сетевых сбоев переподбирает адрес автоматически. Подключается также в `scripts/publish.py` и `scripts/setup_channel.py`.
 
 ⚠️ **Токен бота скомпрометирован**: раньше он попал в `config/.env.example` и историю git. Перегенерировать: @BotFather → /mybots → выбрать бота → API Token → Revoke. Новый токен-record — только в `config/.env` (не в .example, не коммитить).
 

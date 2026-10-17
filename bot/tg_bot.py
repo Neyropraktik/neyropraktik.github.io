@@ -17,6 +17,7 @@ Fallback — перевод с реквизитами (PAYMENT_MANUAL_TEXT в co
 Останов: Ctrl+C (offset сохраняется в bot/state.json — дубли не прилетят)
 """
 
+import http.client
 import json
 import os
 import sys
@@ -24,6 +25,8 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+
+from telegram_net import init_telegram_net, refresh_telegram_ip
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 ORDERS_FILE = BASE_DIR / "bot" / "orders.json"
@@ -153,9 +156,9 @@ def call(token: str, method: str, **params) -> dict:
         body = e.read().decode("utf-8", "replace")
         print(f"API error {method}: {e.code} {body}", file=sys.stderr)
         return {"ok": False, "error_code": e.code, "description": body}
-    except urllib.error.URLError as e:
+    except (urllib.error.URLError, http.client.HTTPException, OSError) as e:
         print(f"Network error {method}: {e}", file=sys.stderr)
-        return {"ok": False}
+        return {"ok": False, "network_error": True}
 
 
 # ── Тексты ───────────────────────────────────────────────────────────────────
@@ -476,7 +479,15 @@ def main() -> None:
         print("Не задан TELEGRAM_BOT_TOKEN (config/.env)", file=sys.stderr)
         sys.exit(1)
 
+    init_telegram_net()
+
     me = call(env["TELEGRAM_BOT_TOKEN"], "getMe")
+    if not me.get("ok"):
+        # Возможно, маршрут через системный DNS не работает — переподбор
+        new_ip = refresh_telegram_ip()
+        if new_ip:
+            print(f"Повторная попытка через IP {new_ip}", file=sys.stderr)
+            me = call(env["TELEGRAM_BOT_TOKEN"], "getMe")
     if not me.get("ok"):
         print("Не удалось подключиться к Bot API", file=sys.stderr)
         sys.exit(1)
@@ -484,12 +495,21 @@ def main() -> None:
 
     state = load_json(STATE_FILE, {"offset": 0})
     offset = state.get("offset", 0)
+    net_fail_streak = 0
     while True:
         res = call(env["TELEGRAM_BOT_TOKEN"], "getUpdates",
                    offset=offset, timeout=50, allowed_updates=["message", "callback_query", "pre_checkout_query"])
         if not res.get("ok"):
+            if res.get("network_error"):
+                net_fail_streak += 1
+                if net_fail_streak >= 3:
+                    new_ip = refresh_telegram_ip()
+                    if new_ip:
+                        print(f"Сеть недоступна — переключаюсь на IP {new_ip}", file=sys.stderr)
+                    net_fail_streak = 0
             time.sleep(3)
             continue
+        net_fail_streak = 0
         for update in res.get("result", []):
             offset = update["update_id"] + 1
             try:

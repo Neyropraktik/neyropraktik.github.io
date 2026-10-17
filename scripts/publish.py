@@ -21,6 +21,13 @@ import urllib.request
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
+
+# Провайдеры могут блокировать часть IP Telegram — см. bot/telegram_net.py
+sys.path.insert(0, str(BASE_DIR / "bot"))
+from telegram_net import init_telegram_net  # noqa: E402
+
+init_telegram_net()
+
 SEND_MESSAGE = "https://api.telegram.org/bot{token}/sendMessage"
 SEND_PHOTO = "https://api.telegram.org/bot{token}/sendPhoto"
 LIMIT = 4096
