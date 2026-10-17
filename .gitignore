@@ -9,6 +9,7 @@ __pycache__/
 
 # Заказы и логи бота (локальные)
 bot/orders.json
+bot/users.json
 bot/*.log*
 
 # Рантайм-состояние бота

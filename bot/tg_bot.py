@@ -8,6 +8,11 @@
   /buy        — выбор тарифа и оплаты (Telegram Stars или перевод)
   /faq        — частые вопросы
   /orders     — история заказов (только для админа)
+  /grant      — (админ) выдать доступ по номеру заказа: /grant NP-1234567
+
+Перевод: покупатель оформляет заказ и присылает чек в бот — админу приходит
+чек с кнопками «выдать доступ» / «не подтверждаю». Кнопка выдаёт материалы
+и ссылку-доступ покупателю. Запасной путь — команда /grant.
 
 Оплата Stars (XTR): нативные платежи Telegram, без внешних провайдеров.
 Fallback — перевод с реквизитами (PAYMENT_MANUAL_TEXT в config/.env).
@@ -33,6 +38,7 @@ from telegram_net import init_telegram_net, refresh_telegram_ip
 BASE_DIR = Path(__file__).resolve().parents[1]
 ORDERS_FILE = BASE_DIR / "bot" / "orders.json"
 STATE_FILE = BASE_DIR / "bot" / "state.json"
+USERS_FILE = BASE_DIR / "bot" / "users.json"
 
 # ── Тарифы курса ─────────────────────────────────────────────────────────────
 # stars — цена в звёздах Telegram (целое число). 1 звезда ≈ 2 ₽ на стороне
@@ -385,10 +391,12 @@ def send_stars_invoice(token: str, env: dict, chat_id, tier_id: str) -> None:
              {"inline_keyboard": [[{"text": "✍️ Написать менеджеру", "url": manager_url(env)}]]})
 
 
-def start_manual_payment(token: str, env: dict, chat_id, tier_id: str) -> None:
+def start_manual_payment(token: str, env: dict, chat_id, tier_id: str,
+                         user: dict | None = None) -> None:
     tier = next((t for t in TIERS if t["id"] == tier_id), None)
     if not tier:
         return
+    user = user or {}
     orders = load_json(ORDERS_FILE, [])
     order = {
         "order_id": new_order_id(),
@@ -396,29 +404,38 @@ def start_manual_payment(token: str, env: dict, chat_id, tier_id: str) -> None:
         "tier": tier["id"],
         "amount_rub": tier["price_rub"],
         "status": "waiting_payment",
+        "username": user.get("username", ""),
+        "name": " ".join(x for x in (user.get("first_name"), user.get("last_name")) if x),
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     orders.append(order)
     save_json(ORDERS_FILE, orders)
     manual_text = env.get("PAYMENT_MANUAL_TEXT", "Оплата переводом: напишите менеджеру — пришлём реквизиты.")
+    price = f"{order['amount_rub']:,}".replace(",", " ")
     keyboard = {"inline_keyboard": [
         [{"text": "✍️ Написать менеджеру", "url": manager_url(env)}],
     ]}
     send(token, chat_id,
-         f"<b>Заказ {order['order_id']}</b>\nТариф «{tier['title']}» — {order['amount_rub']:,} ₽\n\n"
+         f"<b>Заказ {order['order_id']}</b>\nТариф «{tier['title']}» — {price} ₽\n\n"
          f"{manual_text}\n\n"
-         "После оплаты пришлите сюда скриншот чека — доступ откроем вручную.".replace(",", " "),
+         "<b>Как получить доступ:</b>\n"
+         "1. Переведите оплату по реквизитам (в комментарии к переводу можно указать номер заказа).\n"
+         "2. Вернитесь в этот чат и отправьте фото или скриншот чека.\n"
+         "3. Проверю оплату и открою доступ — файлы и ссылка на уроки придут сюда же.\n\n"
+         "Чек можно прислать и менеджеру, но быстрее всего — прямо сюда.",
          keyboard)
     admin = env.get("ADMIN_CHAT_ID")
     if admin:
+        who = f"@{order['username']}" if order["username"] else (order["name"] or "без имени")
         send(token, admin,
              f"🧾 Новый заказ {order['order_id']}\n"
-             f"Тариф: {tier['title']} ({order['amount_rub']:,} ₽)\n"
-             f"Покупатель: chat_id={chat_id}\n"
-             "Статус: ожидает оплаты переводом".replace(",", " "))
+             f"Тариф: {tier['title']} ({price} ₽)\n"
+             f"Покупатель: {who} · chat_id={chat_id}\n"
+             "Статус: ждём оплату переводом. Когда пришлёт чек — придёт кнопка «выдать доступ».")
 
 
-def deliver(token: str, env: dict, chat_id, tier_id: str, charge_id: str = "") -> None:
+def deliver(token: str, env: dict, chat_id, tier_id: str, charge_id: str = "",
+            existing_order_id: str = "") -> None:
     tier = next((t for t in TIERS if t["id"] == tier_id), TIERS[0])
     send(token, chat_id,
          f"<b>Оплата получена — тариф «{tier['title']}» активирован ✅</b>\n\n"
@@ -438,22 +455,33 @@ def deliver(token: str, env: dict, chat_id, tier_id: str, charge_id: str = "") -
         else:
             send(token, chat_id, access_text(tier, env), menu_keyboard(env))
     orders = load_json(ORDERS_FILE, [])
-    orders.append({
-        "order_id": new_order_id(),
-        "chat_id": chat_id,
-        "tier": tier["id"],
-        "amount_rub": tier["price_rub"],
-        "amount_stars": tier["stars"],
-        "status": "paid",
-        "charge_id": charge_id,
-        "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-    })
+    order = next((o for o in orders
+                  if existing_order_id
+                  and str(o.get("order_id", "")).lower() == str(existing_order_id).lower()), None)
+    if order:
+        order["status"] = "paid"
+        order["paid_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        if charge_id:
+            order["charge_id"] = charge_id
+    else:
+        orders.append({
+            "order_id": new_order_id(),
+            "chat_id": chat_id,
+            "tier": tier["id"],
+            "amount_rub": tier["price_rub"],
+            "amount_stars": tier["stars"],
+            "status": "paid",
+            "charge_id": charge_id,
+            "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        })
     save_json(ORDERS_FILE, orders)
     admin = env.get("ADMIN_CHAT_ID")
-    if admin:
+    if admin and not existing_order_id:
+        price = f"{tier['price_rub']:,}".replace(",", " ")
+        stars = f"{tier['stars']:,}".replace(",", " ")
         send(token, admin,
-             f"✅ Оплата Stars\nТариф: {tier['title']} ({tier['price_rub']:,} ₽ / {tier['stars']:,} ⭐)\n"
-             f"Покупатель: chat_id={chat_id}\ncharge_id: {charge_id}".replace(",", " "))
+             f"✅ Оплата Stars\nТариф: {tier['title']} ({price} ₽ / {stars} ⭐)\n"
+             f"Покупатель: chat_id={chat_id}\ncharge_id: {charge_id}")
 
 
 def send_faq(token: str, env: dict, chat_id) -> None:
@@ -479,13 +507,158 @@ def send_orders(token: str, env: dict, chat_id) -> None:
     if not orders:
         send(token, chat_id, "Заказов пока нет.")
         return
+    marks = {"paid": "✅", "waiting_payment": "⏳", "rejected": "❌"}
     lines = [f"<b>Заказы ({len(orders)})</b>"]
     for o in orders[-20:]:
+        who = f" @{o['username']}" if o.get("username") else ""
+        mark = marks.get(o.get("status"), "•")
         lines.append(
-            f"• {o['order_id']} · {o['tier']} · {o.get('amount_rub', '—')} ₽ · {o['status']} · "
-            f"chat {o.get('chat_id')}"
+            f"{mark} {o['order_id']} · {o['tier']} · {o.get('amount_rub', '—')} ₽ · "
+            f"chat {o.get('chat_id')}{who}"
         )
     send(token, chat_id, "\n".join(lines))
+
+
+# ── Ручная выдача: чек → админ → доступ ─────────────────────────────────────
+
+def is_admin(env: dict, chat_id) -> bool:
+    admin = env.get("ADMIN_CHAT_ID")
+    return bool(admin) and str(chat_id) == str(admin)
+
+
+def remember_user(from_user: dict) -> None:
+    """Запоминает контакт пользователя (локальный файл, не в git)."""
+    uid = (from_user or {}).get("id")
+    if not uid:
+        return
+    users = load_json(USERS_FILE, {})
+    users[str(uid)] = {
+        "username": from_user.get("username", ""),
+        "first_name": from_user.get("first_name", ""),
+        "last_name": from_user.get("last_name", ""),
+        "last_seen": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    save_json(USERS_FILE, users)
+
+
+def find_order(order_id: str) -> dict | None:
+    orders = load_json(ORDERS_FILE, [])
+    return next((o for o in orders
+                 if str(o.get("order_id", "")).lower() == str(order_id).lower()), None)
+
+
+def handle_receipt(token: str, env: dict, message: dict) -> None:
+    """Покупатель прислал чек (фото/файл): пересылаем админу с кнопками."""
+    chat_id = message["chat"]["id"]
+    user = message.get("from") or {}
+    orders = load_json(ORDERS_FILE, [])
+    order = next((o for o in reversed(orders)
+                  if str(o.get("chat_id")) == str(chat_id)
+                  and o.get("status") == "waiting_payment"), None)
+    if order:
+        order["receipt"] = {
+            "message_id": message.get("message_id"),
+            "at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        save_json(ORDERS_FILE, orders)
+
+    admin = env.get("ADMIN_CHAT_ID")
+    if not admin:
+        send(token, chat_id,
+             "Чек получил ✅ Напишите менеджеру — он проверит оплату и откроет доступ.",
+             menu_keyboard(env))
+        return
+
+    who = (f"@{user.get('username')}" if user.get("username")
+           else (user.get("first_name") or "без имени"))
+    if order:
+        tier = next((t for t in TIERS if t["id"] == order.get("tier")), None)
+        price = f"{order.get('amount_rub', 0):,}".replace(",", " ")
+        caption = (f"🧾 Чек по заказу {order['order_id']}\n"
+                   f"Тариф: {tier['title'] if tier else order.get('tier')} — {price} ₽\n"
+                   f"Покупатель: {who} · chat_id={chat_id}\n\n"
+                   "Проверьте оплату и нажмите кнопку ниже.")
+        keyboard = {"inline_keyboard": [
+            [{"text": "✅ Оплата получена — выдать доступ",
+              "callback_data": f"grant:{order['order_id']}"}],
+            [{"text": "❌ Не подтверждаю", "callback_data": f"reject:{order['order_id']}"}],
+        ]}
+    else:
+        caption = (f"🧾 Файл от {who} · chat_id={chat_id}\n"
+                   "Заказ в боте не найден — если это оплата, оформите /catalog.")
+        keyboard = None
+
+    params = dict(chat_id=admin, from_chat_id=chat_id,
+                  message_id=message["message_id"], caption=caption)
+    if keyboard:
+        params["reply_markup"] = keyboard
+    res = call(token, "copyMessage", **params)
+    if not res.get("ok"):
+        call(token, "forwardMessage", chat_id=admin, from_chat_id=chat_id,
+             message_id=message["message_id"])
+        send(token, admin, caption, keyboard)
+
+    if order:
+        send(token, chat_id,
+             "<b>Чек получил ✅</b>\nПроверяю оплату — обычно это занимает несколько минут. "
+             "Доступ придёт сюда же: файлы и ссылка на уроки.")
+    else:
+        send(token, chat_id,
+             "Файл передал администратору. Если это оплата курса — оформите заказ через /catalog, "
+             "тогда доступ откроется после проверки.",
+             menu_keyboard(env))
+
+
+def grant_by_order_id(token: str, env: dict, admin_chat, order_id: str,
+                      cb_message: dict | None = None) -> None:
+    """Админ подтвердил оплату — выдаём доступ покупателю."""
+    if not is_admin(env, admin_chat):
+        return
+    order = find_order(order_id)
+    if not order:
+        send(token, admin_chat, f"Заказ {order_id} не найден. Список — /orders")
+        return
+    if order.get("status") == "paid":
+        send(token, admin_chat, f"По заказу {order_id} доступ уже выдан.")
+        return
+    deliver(token, env, order["chat_id"], order["tier"],
+            charge_id=f"manual:{order.get('order_id')}",
+            existing_order_id=order.get("order_id"))
+    who = f"@{order['username']}" if order.get("username") else (order.get("name") or "")
+    send(token, admin_chat,
+         f"✅ Доступ выдан по заказу {order.get('order_id')} ({order.get('tier')})"
+         + (f" — {who}" if who else ""))
+    if cb_message:
+        call(token, "editMessageReplyMarkup", chat_id=admin_chat,
+             message_id=cb_message["message_id"],
+             reply_markup={"inline_keyboard": [
+                 [{"text": "✅ Доступ выдан", "callback_data": "noop"}]]})
+
+
+def reject_order(token: str, env: dict, admin_chat, order_id: str,
+                 cb_message: dict | None = None) -> None:
+    """Админ не подтвердил оплату."""
+    if not is_admin(env, admin_chat):
+        return
+    orders = load_json(ORDERS_FILE, [])
+    target = next((o for o in orders
+                   if str(o.get("order_id", "")).lower() == str(order_id).lower()), None)
+    if not target:
+        send(token, admin_chat, f"Заказ {order_id} не найден.")
+        return
+    target["status"] = "rejected"
+    target["rejected_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+    save_json(ORDERS_FILE, orders)
+    send(token, target["chat_id"],
+         f"Оплата по заказу {target.get('order_id')} не подтверждена. "
+         "Если это ошибка — напишите менеджеру, разберёмся.",
+         menu_keyboard(env))
+    send(token, admin_chat, f"❌ Заказ {target.get('order_id')} отклонён, покупатель уведомлён.")
+    if cb_message:
+        call(token, "editMessageReplyMarkup", chat_id=admin_chat,
+             message_id=cb_message["message_id"],
+             reply_markup={"inline_keyboard": [
+                 [{"text": "❌ Отклонён", "callback_data": "noop"}]]})
 
 
 def handle_update(env: dict, update: dict) -> None:
@@ -493,6 +666,8 @@ def handle_update(env: dict, update: dict) -> None:
 
     # Оплата Stars
     message = update.get("message") or {}
+    if message.get("from"):
+        remember_user(message["from"])
     if message.get("successful_payment"):
         sp = message["successful_payment"]
         payload = sp.get("invoice_payload", "")
@@ -507,6 +682,11 @@ def handle_update(env: dict, update: dict) -> None:
     if pre:
         call(token, "answerPreCheckoutQuery",
              pre_checkout_query_id=pre["id"], ok=True)
+        return
+
+    # Чек от покупателя (фото или файл): пересылаем админу с кнопкой выдачи
+    if message.get("chat") and (message.get("photo") or message.get("document")):
+        handle_receipt(token, env, message)
         return
 
     # Нажатия на кнопки
@@ -528,7 +708,11 @@ def handle_update(env: dict, update: dict) -> None:
         elif data.startswith("pay_stars:"):
             send_stars_invoice(token, env, chat_id, data.split(":", 1)[1])
         elif data.startswith("pay_manual:"):
-            start_manual_payment(token, env, chat_id, data.split(":", 1)[1])
+            start_manual_payment(token, env, chat_id, data.split(":", 1)[1], cb.get("from"))
+        elif data.startswith("grant:"):
+            grant_by_order_id(token, env, chat_id, data.split(":", 1)[1], cb.get("message"))
+        elif data.startswith("reject:"):
+            reject_order(token, env, chat_id, data.split(":", 1)[1], cb.get("message"))
         return
 
     # Команды и текст
@@ -563,10 +747,26 @@ def handle_update(env: dict, update: dict) -> None:
         send_faq(token, env, chat_id)
     elif cmd == "/orders":
         send_orders(token, env, chat_id)
+    elif cmd == "/grant":
+        if is_admin(env, chat_id):
+            if len(parts) > 1:
+                grant_by_order_id(token, env, chat_id, parts[1])
+            else:
+                send(token, chat_id,
+                     "Формат: /grant NP-1234567 — выдать доступ по заказу. Список заказов: /orders")
     elif text:
-        send(token, chat_id,
-             "Нажмите /start — открою меню курса: тарифы, программа, вопросы.",
-             menu_keyboard(env))
+        orders = load_json(ORDERS_FILE, [])
+        waiting = any(str(o.get("chat_id")) == str(chat_id) and o.get("status") == "waiting_payment"
+                      for o in orders)
+        if waiting:
+            send(token, chat_id,
+                 "Если вы уже перевели оплату — отправьте сюда фото или скриншот чека, "
+                 "и доступ откроется после проверки. Реквизиты — в сообщении с заказом выше.",
+                 menu_keyboard(env))
+        else:
+            send(token, chat_id,
+                 "Нажмите /start — открою меню курса: тарифы, программа, вопросы.",
+                 menu_keyboard(env))
 
 
 def main() -> None:
