@@ -21,6 +21,9 @@ python3 scripts/build_pdf.py products/prompts-marketing.md "$OUT_DIR/Prompts-Mar
 echo "> prompts-jobseeker"
 python3 scripts/build_pdf.py products/prompts-jobseeker.md "$OUT_DIR/Prompts-Jobseeker.pdf"
 
+echo "> prompts-universal"
+python3 scripts/build_pdf.py products/prompts-universal.md "$OUT_DIR/Prompts-Universal.pdf"
+
 echo ""
 echo "Готово. Продукты в $OUT_DIR/"
 ls -lh "$OUT_DIR"

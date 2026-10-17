@@ -68,6 +68,11 @@ PRODUCTS = {
         "chips": ["10 шаблонов", "Резюме и письма", "Собеседования"],
         "content_class": "chapters doc-prompts",
     },
+    "prompts-universal.md": {
+        "kicker": "Библиотека промптов · Универсальные",
+        "chips": ["10 шаблонов", "Работа и учёба", "Любые задачи"],
+        "content_class": "chapters doc-prompts",
+    },
 }
 DEFAULT_META = {
     "kicker": "PDF-продукт курса",

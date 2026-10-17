@@ -127,6 +127,7 @@ TIER_PDFS = {
         BASE_DIR / "pdf" / "Prompts-HR.pdf",
         BASE_DIR / "pdf" / "Prompts-Marketing.pdf",
         BASE_DIR / "pdf" / "Prompts-Jobseeker.pdf",
+        BASE_DIR / "pdf" / "Prompts-Universal.pdf",
     ],
 }
 # Стандарт и выше получают тот же набор материалов + доступ к курсу на сайте
