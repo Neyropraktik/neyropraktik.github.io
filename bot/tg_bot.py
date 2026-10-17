@@ -85,6 +85,26 @@ def new_order_id() -> str:
     return f"NP-{int(time.time() * 1000) % 10_000_000}"
 
 
+def manager_username(env: dict) -> str:
+    """Личный аккаунт менеджера (без @) — сюда ведут кнопки связи."""
+    return env.get("MANAGER_USERNAME", "").strip().lstrip("@")
+
+
+def manager_url(env: dict) -> str:
+    """Ссылка на личку менеджера; если не задан — на канал курса."""
+    name = manager_username(env)
+    if name:
+        return f"https://t.me/{name}"
+    channel = env.get("TELEGRAM_CHANNEL_USERNAME", "")
+    return f"https://t.me/{channel}" if channel else "https://t.me/neuropraktik_ru"
+
+
+def manager_mention(env: dict) -> str:
+    """Упоминание менеджера для текстов: @username или слово «менеджеру»."""
+    name = manager_username(env)
+    return f"@{name}" if name else "менеджеру"
+
+
 def menu_keyboard(env: dict) -> dict:
     """Главное меню бота. Если задан BOOSTY_URL — добавляется кнопка канала."""
     buttons = [
@@ -92,7 +112,7 @@ def menu_keyboard(env: dict) -> dict:
         [{"text": "🆓 Бесплатный чек-лист", "callback_data": "checklist"}],
         [{"text": "📚 Программа", "callback_data": "program"},
          {"text": "❓ Вопросы", "callback_data": "faq"}],
-        [{"text": "✍️ Написать менеджеру", "url": "https://t.me/neuropraktik_ru"}],
+        [{"text": "✍️ Написать менеджеру", "url": manager_url(env)}],
     ]
     boosty = env.get("BOOSTY_URL", "")
     if boosty.startswith("http"):
@@ -263,7 +283,7 @@ def send_welcome(token: str, env: dict, chat_id) -> None:
     send(token, chat_id, text, menu_keyboard(env))
 
 
-def send_checklist(token: str, chat_id) -> None:
+def send_checklist(token: str, chat_id, env: dict) -> None:
     """Бесплатный чек-лист: текст + PDF-файл."""
     send(token, chat_id,
          "<b>Чек-лист «10 шагов к идеальному промпту»</b>\n\n"
@@ -273,9 +293,9 @@ def send_checklist(token: str, chat_id) -> None:
         res = upload(token, "sendDocument", chat_id, CHECKLIST_PDF)
         if not res.get("ok"):
             send(token, chat_id,
-                 "Не смог отправить файл. Напишите менеджеру @neuropraktik_ru — пришлём вручную.")
+                 f"Не смог отправить файл. Напишите {manager_mention(env)} — пришлём вручную.")
     else:
-        send(token, chat_id, "PDF временно недоступен — напишите менеджеру @neuropraktik_ru.")
+        send(token, chat_id, f"PDF временно недоступен — напишите {manager_mention(env)}.")
 
 
 def send_catalog(token: str, chat_id) -> None:
@@ -300,7 +320,7 @@ def send_payment_choice(token: str, chat_id, tier_id: str) -> None:
     send(token, chat_id, payment_choice_text(tier), keyboard)
 
 
-def send_stars_invoice(token: str, chat_id, tier_id: str) -> None:
+def send_stars_invoice(token: str, env: dict, chat_id, tier_id: str) -> None:
     tier = next((t for t in TIERS if t["id"] == tier_id), None)
     if not tier:
         return
@@ -315,7 +335,8 @@ def send_stars_invoice(token: str, chat_id, tier_id: str) -> None:
     )
     if not res.get("ok"):
         send(token, chat_id,
-             "Не удалось создать счёт. Напишите менеджеру — оформим доступ вручную.")
+             "Не удалось создать счёт. Напишите менеджеру — оформим доступ вручную.",
+             {"inline_keyboard": [[{"text": "✍️ Написать менеджеру", "url": manager_url(env)}]]})
 
 
 def start_manual_payment(token: str, env: dict, chat_id, tier_id: str) -> None:
@@ -333,11 +354,15 @@ def start_manual_payment(token: str, env: dict, chat_id, tier_id: str) -> None:
     }
     orders.append(order)
     save_json(ORDERS_FILE, orders)
-    manual_text = env.get("PAYMENT_MANUAL_TEXT", "Напишите менеджеру для оплаты переводом.")
+    manual_text = env.get("PAYMENT_MANUAL_TEXT", "Оплата переводом: напишите менеджеру — пришлём реквизиты.")
+    keyboard = {"inline_keyboard": [
+        [{"text": "✍️ Написать менеджеру", "url": manager_url(env)}],
+    ]}
     send(token, chat_id,
          f"<b>Заказ {order['order_id']}</b>\nТариф «{tier['title']}» — {order['amount_rub']:,} ₽\n\n"
          f"{manual_text}\n\n"
-         "После оплаты пришлите сюда скриншот чека — доступ откроем вручную.".replace(",", " "))
+         "После оплаты пришлите сюда скриншот чека — доступ откроем вручную.".replace(",", " "),
+         keyboard)
     admin = env.get("ADMIN_CHAT_ID")
     if admin:
         send(token, admin,
@@ -437,7 +462,7 @@ def handle_update(env: dict, update: dict) -> None:
         if data == "catalog":
             send_catalog(token, chat_id)
         elif data == "checklist":
-            send_checklist(token, chat_id)
+            send_checklist(token, chat_id, env)
         elif data == "program":
             send_program(token, env, chat_id)
         elif data == "faq":
@@ -445,7 +470,7 @@ def handle_update(env: dict, update: dict) -> None:
         elif data.startswith("tier:"):
             send_payment_choice(token, chat_id, data.split(":", 1)[1])
         elif data.startswith("pay_stars:"):
-            send_stars_invoice(token, chat_id, data.split(":", 1)[1])
+            send_stars_invoice(token, env, chat_id, data.split(":", 1)[1])
         elif data.startswith("pay_manual:"):
             start_manual_payment(token, env, chat_id, data.split(":", 1)[1])
         return
@@ -455,17 +480,32 @@ def handle_update(env: dict, update: dict) -> None:
     chat_id = (message.get("chat") or {}).get("id")
     if not chat_id:
         return
-    if text in ("/start", "/menu"):
-        send_welcome(token, env, chat_id)
-    elif text in ("/catalog", "/buy"):
+    parts = text.split()
+    cmd = parts[0].split("@", 1)[0] if parts else ""
+    payload = parts[1].lower() if len(parts) > 1 else ""
+    if cmd in ("/start", "/menu"):
+        # Диплинки с лендинга: ?start=checklist, ?start=buy, ?start=buy_standard…
+        if payload == "checklist":
+            send_checklist(token, chat_id, env)
+        elif payload in ("buy", "catalog", "course"):
+            send_catalog(token, chat_id)
+        elif payload.startswith("buy_"):
+            send_payment_choice(token, chat_id, payload[4:])
+        elif payload == "program":
+            send_program(token, env, chat_id)
+        elif payload == "faq":
+            send_faq(token, env, chat_id)
+        else:
+            send_welcome(token, env, chat_id)
+    elif cmd in ("/catalog", "/buy"):
         send_catalog(token, chat_id)
-    elif text in ("/checklist", "/checklist@neuropraktik_rubot"):
-        send_checklist(token, chat_id)
-    elif text == "/program":
+    elif cmd == "/checklist":
+        send_checklist(token, chat_id, env)
+    elif cmd == "/program":
         send_program(token, env, chat_id)
-    elif text == "/faq":
+    elif cmd == "/faq":
         send_faq(token, env, chat_id)
-    elif text == "/orders":
+    elif cmd == "/orders":
         send_orders(token, env, chat_id)
     elif text:
         send(token, chat_id,

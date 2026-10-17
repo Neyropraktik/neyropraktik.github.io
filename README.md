@@ -45,11 +45,13 @@ config/.env.example     Шаблон конфигурации (скопиров�
 ## Бот
 
 ```bash
-# заполнить config/.env (токен, chat_id канала, COURSE_URL, ADMIN_CHAT_ID, BOOSTY_URL)
+# заполнить config/.env (токен, chat_id канала, COURSE_URL, ADMIN_CHAT_ID, BOOSTY_URL, MANAGER_USERNAME)
 python3 bot/tg_bot.py
 ```
 
 - `/start` — меню, `/catalog` — тарифы, `/checklist` — бесплатный чек-лист PDF
+- Диплинки с лендинга: `?start=checklist` (чек-лист), `?start=buy` (каталог), `?start=buy_basic|buy_standard|buy_premium|buy_vip` (карточка тарифа)
+- Контакт менеджера: `MANAGER_USERNAME` в `config/.env` (без @) — кнопка «✍️ Написать менеджеру» и оплата переводом ведут в личку; если пусто — в канал курса
 - Меню: теглайн-брендинг, кнопка «💜 Boosty — посты и разборы» (появляется при заполненном `BOOSTY_URL`)
 - Оплата: Telegram Stars (XTR) или перевод; после оплаты бот присылает доступ и PDF-материалы
 - Заказы: `bot/orders.json`; `/orders` — для админа
