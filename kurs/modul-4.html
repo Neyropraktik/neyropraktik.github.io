@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>try{var t=localStorage.getItem('np-theme');if(!t)t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <meta name="robots" content="noindex">
+  <script src="../assets/js/access-hash.js"></script>
   <title>Модуль 4. Автоматизация — НейроПрактик 2026</title>
   <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
   <link rel="stylesheet" href="../assets/css/style.css">
@@ -55,6 +57,29 @@
         <h1>Автоматизация</h1>
         <p class="lesson-meta">3 урока + 2 задания + тест · ~40 минут · цель: превратить разовые промпты в систему — контент-завод и ежедневные агенты</p>
       </header>
+
+      <div class="lock-card">
+        <div class="lock-icon" aria-hidden="true">🔒</div>
+        <h2>Модуль 4 открывается после покупки</h2>
+        <p>Модули 2–5 с уроками, заданиями и тестами открываются сразу после оплаты: бот пришлёт PDF-материалы и ссылку-доступ.</p>
+        <p class="lock-note">Модуль 1 «База» и программа курса — открыты для всех, можно начать бесплатно.</p>
+        <div class="lock-actions">
+          <a class="btn btn-primary" href="https://t.me/neuropraktik_rubot?start=buy_standard" target="_blank" rel="noopener">Купить и открыть доступ</a>
+          <a class="btn btn-ghost" href="modul-1.html">Перейти к модулю 1</a>
+        </div>
+        <form class="unlock-form" id="unlockForm" autocomplete="off">
+          <label for="unlockKey">Уже купили? Введите код доступа из бота:</label>
+          <div class="unlock-row">
+            <input id="unlockKey" type="text" name="key" placeholder="NP26-XXXX-XXXX-XXXX" spellcheck="false">
+            <button class="btn btn-primary btn-small" type="submit">Открыть</button>
+          </div>
+          <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
+        </form>
+        <p class="lock-help">Код приходит в боте сразу после оплаты. Потеряли? Напишите <a href="https://t.me/neuropraktik_rubot" target="_blank" rel="noopener">@neuropraktik_rubot</a> — пришлём снова.</p>
+        <noscript><p class="lock-help">Для проверки доступа включите JavaScript — или напишите в бот, поможем открыть вручную.</p></noscript>
+      </div>
+
+      <div class="gate-content">
 
       <h2 id="lesson-4-1">Урок 4.1. Контент-завод: план → черновик → публикация</h2>
 
@@ -161,6 +186,7 @@
           <span class="pager-title">Модуль 5. Монетизация</span>
         </a>
       </nav>
+      </div><!-- /gate-content -->
     </article>
   </div>
 </main>
@@ -174,5 +200,6 @@
 
 <script src="../assets/js/app.js"></script>
 <script src="../assets/js/course.js"></script>
+<script src="../assets/js/access.js"></script>
 </body>
 </html>

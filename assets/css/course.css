@@ -358,3 +358,83 @@ html[data-theme="dark"] .np-top { box-shadow: 0 18px 40px -16px rgba(91, 61, 245
   .btn-primary::after { display: none; }
   .np-ring .fg, .np-bar i { transition: none; }
 }
+
+/* ==========================================================================
+   ДОСТУП К ЗАКРЫТЫМ МОДУЛЯМ (модули 2–5)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .lock-card, .gate-content, .unlock-card { animation: none !important; }
+}
+
+.gate-content { display: none; }
+html.np-unlocked .gate-content { display: block; }
+
+/* карточка «модуль открывается после покупки» */
+.lock-card {
+  background: linear-gradient(180deg, rgba(240, 125, 255, 0.12), transparent 60%), var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 28px 26px; margin: 14px 0 26px; box-shadow: var(--depth-2);
+}
+.lock-icon { font-size: 34px; line-height: 1; margin-bottom: 10px; }
+.lock-card h2 { font-size: 24px; margin-bottom: 10px; }
+.lock-card p { color: var(--ink-soft); margin-bottom: 10px; }
+.lock-note { font-size: 15px; }
+.lock-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 6px; }
+.lock-help { font-size: 14px; color: var(--muted); }
+html.np-unlocked .lock-card { display: none; }
+html.np-checking .lock-card { display: none; }
+
+/* форма «Уже купили?» */
+.unlock-form { margin: 18px 0 10px; border-top: 1px dashed var(--line); padding-top: 16px; }
+.unlock-form label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.unlock-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.unlock-row input {
+  flex: 1 1 260px; min-width: 200px; padding: 11px 14px;
+  font: 500 15px var(--body); color: var(--ink);
+  background: var(--card); border: 1px solid var(--line-strong);
+  border-radius: 10px; letter-spacing: 0.02em;
+}
+.unlock-row input::placeholder { color: var(--muted); }
+.unlock-row input:focus { outline: 2px solid var(--violet); outline-offset: 1px; border-color: var(--violet); }
+.unlock-msg { margin: 10px 0 0; font-size: 14px; min-height: 1.2em; color: var(--muted); }
+.unlock-msg.ok { color: var(--green); }
+.unlock-msg.bad { color: #c0264f; }
+html[data-theme="dark"] .unlock-msg.bad { color: #ff7a9d; }
+
+/* компактная карточка покупателя на странице программы */
+.unlock-card {
+  background: linear-gradient(180deg, rgba(61, 219, 232, 0.10), transparent 70%), var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 20px; margin: 2px 0 26px; box-shadow: var(--depth-1);
+}
+.unlock-card-text { margin-bottom: 10px; }
+.unlock-card-text b { display: block; font-family: var(--display); font-size: 18px; }
+.unlock-card-text span { color: var(--ink-soft); font-size: 15px; }
+.unlock-card .unlock-form { margin: 0; border-top: none; padding-top: 0; }
+.unlock-card .unlock-msg { margin-top: 8px; }
+html.np-unlocked .unlock-card { display: none; }
+html.np-checking .unlock-card { display: none; }
+
+/* подписи «бесплатно / после покупки» на странице программы */
+.lock-hint {
+  display: inline-block; font-size: 13px; border-radius: 999px;
+  padding: 3px 12px; margin-left: 6px; border: 1px solid var(--line);
+  background: var(--paper-2); color: var(--ink-soft); white-space: nowrap;
+}
+.lock-hint.locked { background: rgba(211, 49, 232, 0.08); border-color: rgba(211, 49, 232, 0.35); color: var(--violet-deep); }
+.lock-hint.open,
+.lock-hint.free { background: rgba(31, 122, 77, 0.10); border-color: rgba(31, 122, 77, 0.35); color: var(--green); }
+html[data-theme="dark"] .lock-hint.locked { background: rgba(228, 77, 255, 0.14); border-color: rgba(228, 77, 255, 0.4); }
+html[data-theme="dark"] .lock-hint.open,
+html[data-theme="dark"] .lock-hint.free { background: rgba(63, 174, 125, 0.16); border-color: rgba(63, 174, 125, 0.45); }
+
+/* чипы на лендинге */
+.chip-free { border-color: rgba(31, 122, 77, 0.45); color: var(--green); }
+.chip-lock { border-color: rgba(211, 49, 232, 0.45); color: var(--violet-deep); }
+html[data-theme="dark"] .chip-free { border-color: rgba(63, 174, 125, 0.5); }
+html[data-theme="dark"] .chip-lock { border-color: rgba(228, 77, 255, 0.5); }
+
+.modules-note { margin-top: 18px; color: var(--muted); font-size: 15px; }
+
+.np-lock-mark, .np-unlock-mark { font-size: 12px; }
