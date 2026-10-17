@@ -1,0 +1,360 @@
+/* ==========================================================================
+   НейроПрактик 2026 — интерактивный слой: тесты, прогресс, тёмная тема
+   Подключается после style.css
+   ========================================================================== */
+
+/* ---------- мелкие общие улучшения ---------- */
+
+[id] { scroll-margin-top: 86px; }
+
+::selection { background: var(--violet); color: #fff; }
+
+/* мягкое свечение карточек в герое (не конфликтует с JS-параллаксом) */
+@keyframes np-glow {
+  0%, 100% { box-shadow: var(--depth-3); }
+  50% { box-shadow: var(--depth-3), 0 0 34px rgba(240, 125, 255, 0.30); }
+}
+.hero-card3d { animation: np-glow 6.5s ease-in-out infinite; }
+.hero-card3d.c2 { animation-delay: -2.2s; }
+.hero-card3d.c3 { animation-delay: -4.4s; }
+
+/* каскад появления карточек */
+.js .grid-3 .reveal:nth-child(2), .js .grid-2 .reveal:nth-child(2) { transition-delay: 0.07s; }
+.js .grid-3 .reveal:nth-child(3) { transition-delay: 0.14s; }
+.js .prices .tier:nth-child(2) { transition-delay: 0.07s; }
+.js .prices .tier:nth-child(3) { transition-delay: 0.14s; }
+.js .prices .tier:nth-child(4) { transition-delay: 0.21s; }
+
+/* блик на главной кнопке */
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 42%; left: -60%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transform: skewX(-18deg); transition: left 0.55s var(--ease-3d);
+  pointer-events: none;
+}
+.btn-primary:hover::after { left: 118%; }
+
+/* ---------- интерактивные тесты ---------- */
+
+.np-quiz { margin-top: 16px; display: grid; gap: 12px; }
+
+.np-quiz-q {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px 16px; box-shadow: var(--depth-1);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.np-quiz-q.missing {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(61, 219, 232, 0.18);
+}
+
+.np-quiz-qtitle {
+  font-weight: 600; color: var(--ink);
+  display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px;
+}
+.np-quiz-num {
+  flex: none; width: 24px; height: 24px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--violet), var(--violet-deep));
+  color: #fff; display: grid; place-items: center;
+  font: 700 12px var(--body); box-shadow: 0 4px 10px -3px rgba(91, 61, 245, 0.55);
+}
+
+.np-quiz-opts { display: grid; gap: 8px; }
+
+.np-quiz-opt {
+  position: relative; display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px;
+  cursor: pointer; background: rgba(239, 236, 228, 0.35);
+  transition: border-color 0.15s, background 0.15s, transform 0.15s var(--ease-3d);
+}
+.np-quiz-opt:hover { border-color: var(--violet); text-decoration: none; transform: translateY(-1px); background: rgba(239, 236, 228, 0.55); }
+.np-quiz-opt input { position: absolute; opacity: 0; pointer-events: none; }
+
+.np-quiz-letter {
+  flex: none; width: 22px; height: 22px; margin-top: 1px;
+  border: 1px solid var(--line-strong); border-radius: 7px;
+  display: grid; place-items: center;
+  font: 700 11px var(--body); color: var(--ink-soft);
+  background: var(--card); transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.np-quiz-text { color: var(--ink-soft); font-size: 15px; }
+
+.np-quiz-opt.picked { border-color: var(--violet); background: var(--violet-tint); }
+.np-quiz-opt.picked .np-quiz-letter { background: var(--violet); border-color: var(--violet); color: #fff; }
+
+.np-quiz-opt.correct { border-color: #1f9d61; background: rgba(31, 122, 77, 0.10); }
+.np-quiz-opt.correct .np-quiz-letter { background: #1f9d61; border-color: #1f9d61; color: #fff; }
+
+.np-quiz-opt.wrong { border-color: rgba(200, 60, 60, 0.55); background: rgba(200, 60, 60, 0.08); }
+.np-quiz-opt.wrong .np-quiz-letter { background: #c33d3d; border-color: #c33d3d; color: #fff; }
+
+.np-quiz-opt:has(input:focus-visible) { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+.np-quiz-foot { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.np-quiz-result {
+  display: none; padding: 12px 16px; border-radius: 10px;
+  font-weight: 600; font-size: 15px;
+}
+.np-quiz-result.show { display: block; }
+.np-quiz-result.ok { background: rgba(31, 122, 77, 0.12); color: var(--green); border: 1px solid rgba(31, 122, 77, 0.35); }
+.np-quiz-result.mid { background: rgba(61, 219, 232, 0.14); color: #0e6f7c; border: 1px solid rgba(61, 219, 232, 0.4); }
+.np-quiz-result.bad { background: rgba(200, 60, 60, 0.10); color: #b23b3b; border: 1px solid rgba(200, 60, 60, 0.35); }
+
+/* ---------- кнопка «скопировать промпт» ---------- */
+
+blockquote.np-copyable, pre.np-copyable { position: relative; }
+.lesson-body blockquote.np-copyable { padding-right: 128px; }
+.lesson-body pre.np-copyable { padding-right: 128px; }
+
+.np-copy {
+  position: absolute; top: 9px; right: 9px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; font: 600 12px var(--body);
+  color: var(--ink-soft); background: var(--card);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  cursor: pointer; opacity: 0; transform: translateY(-3px);
+  transition: opacity 0.2s, transform 0.2s var(--ease-3d), color 0.15s, border-color 0.15s;
+  box-shadow: var(--depth-1);
+}
+blockquote:hover .np-copy, pre:hover .np-copy, .np-copy:focus-visible { opacity: 1; transform: none; text-decoration: none; }
+.np-copy:hover { color: var(--violet-deep); border-color: var(--violet); }
+.np-copy.ok { color: #1f9d61; border-color: rgba(31, 122, 77, 0.45); }
+
+@media (hover: none) {
+  .np-copy { opacity: 1; transform: none; }
+}
+
+/* ---------- карточка прогресса в оглавлении ---------- */
+
+.np-progress {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px 14px 12px; margin: 0 0 22px;
+  box-shadow: var(--depth-1);
+}
+.np-progress-row { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+
+.np-ring { position: relative; width: 54px; height: 54px; flex: none; }
+.np-ring svg { width: 54px; height: 54px; transform: rotate(-90deg); }
+.np-ring .bg { fill: none; stroke: var(--line); stroke-width: 5; }
+.np-ring .fg {
+  fill: none; stroke: var(--violet); stroke-width: 5; stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s var(--ease-3d);
+}
+.np-ring b {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 700 12.5px var(--body); color: var(--violet-deep);
+}
+
+.np-progress-info b { display: block; font: 700 16px var(--display); }
+.np-progress-info span { color: var(--muted); font-size: 12.5px; }
+
+.np-progress-mods { list-style: none; margin: 0; padding: 0; }
+.np-progress-mods li {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  padding: 5px 0; border-top: 1px dashed var(--line); font-size: 13px;
+}
+.np-progress-mods li:first-child { border-top: 0; }
+.np-progress-mods a { color: var(--ink-soft); }
+.np-progress-mods a:hover { color: var(--violet-deep); text-decoration: none; }
+.np-progress-mods .np-count { color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.np-progress-mods li.full .np-count { color: #1f9d61; font-weight: 700; }
+
+.np-progress-reset {
+  margin-top: 10px; width: 100%; text-align: center;
+  font: 600 12px var(--body); color: var(--muted);
+  background: none; border: 1px dashed var(--line-strong);
+  border-radius: 8px; padding: 6px; cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.np-progress-reset:hover { color: #b23b3b; border-color: #b23b3b; }
+
+/* галочки у уроков в оглавлении */
+.np-tick { color: #1f9d61; font-weight: 700; margin-left: 6px; }
+
+/* ---------- обзор прогресса на странице программы ---------- */
+
+.np-course-progress {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  border: 1px solid var(--line); border-radius: 14px;
+  background: linear-gradient(180deg, rgba(240, 125, 255, 0.10), transparent 70%), var(--card);
+  padding: 16px 20px; margin: -4px 0 36px;
+  box-shadow: var(--depth-2);
+}
+.np-course-progress .np-text b { display: block; font: 700 17px var(--display); }
+.np-course-progress .np-text span { color: var(--muted); font-size: 13px; }
+
+.np-bar {
+  flex: 1 1 220px; height: 9px; border-radius: 999px;
+  background: var(--paper-2); border: 1px solid var(--line); overflow: hidden;
+}
+.np-bar i {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--violet), var(--amber));
+  border-radius: 999px; transition: width 0.6s var(--ease-3d);
+}
+
+/* бейдж прогресса у заголовков модулей */
+.np-mod-badge {
+  display: inline-flex; align-items: center; gap: 5px; vertical-align: middle;
+  margin-left: 10px; padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--card);
+  color: var(--muted); font: 700 12px var(--body); font-variant-numeric: tabular-nums;
+}
+.np-mod-badge.full { color: #fff; background: linear-gradient(135deg, #1f9d61, #1f7a4d); border-color: transparent; }
+
+/* ---------- чип «отметить пройденным» ---------- */
+
+.np-chip {
+  display: inline-flex; align-items: center; gap: 6px; vertical-align: middle;
+  margin-left: 10px; padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--card);
+  color: var(--ink-soft); font: 600 12.5px var(--body); cursor: pointer;
+  box-shadow: var(--depth-1);
+  transition: color 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.2s;
+}
+.np-chip:hover { color: var(--violet-deep); border-color: var(--violet); text-decoration: none; }
+.np-chip.done {
+  color: #fff; background: linear-gradient(135deg, #1f9d61, #1f7a4d);
+  border-color: transparent; box-shadow: 0 6px 14px -6px rgba(31, 122, 77, 0.6);
+}
+
+/* ---------- кнопка «наверх» ---------- */
+
+.np-top {
+  position: fixed; bottom: 22px; right: 20px; z-index: 80;
+  width: 46px; height: 46px; border-radius: 999px; border: 0; cursor: pointer;
+  display: grid; place-items: center; font-size: 19px; color: #fff;
+  background: linear-gradient(135deg, var(--violet), var(--violet-deep));
+  box-shadow: var(--glow-violet);
+  opacity: 0; pointer-events: none; transform: translateY(10px);
+  transition: opacity 0.25s, transform 0.25s var(--ease-3d);
+}
+.np-top.show { opacity: 1; pointer-events: auto; transform: none; }
+.np-top:hover { transform: translateY(-3px); }
+
+/* ---------- переключатель темы ---------- */
+
+.np-theme {
+  width: 38px; height: 38px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--card);
+  display: grid; place-items: center; font-size: 16px; line-height: 1;
+  box-shadow: var(--depth-1); flex: none;
+  transition: border-color 0.15s, box-shadow 0.2s, transform 0.15s;
+}
+.np-theme:hover { border-color: var(--violet); box-shadow: var(--depth-2); }
+.np-theme:active { transform: translateY(1px); }
+.np-theme .i-sun { display: none; }
+.np-theme .i-moon { display: inline; }
+html[data-theme="dark"] .np-theme .i-sun { display: inline; }
+html[data-theme="dark"] .np-theme .i-moon { display: none; }
+
+/* ---------- всплывающие уведомления ---------- */
+
+.np-toast {
+  position: fixed; left: 50%; bottom: 26px; z-index: 200;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--ink); color: var(--paper);
+  padding: 12px 22px; border-radius: 999px;
+  font-weight: 600; font-size: 14px; letter-spacing: 0.01em;
+  box-shadow: var(--depth-3); opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s var(--ease-3d);
+  max-width: min(92vw, 480px); text-align: center;
+}
+.np-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ==========================================================================
+   ТЁМНАЯ ТЕМА
+   ========================================================================== */
+
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* переопределение дизайн-токенов */
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  --paper: #0d0916;
+  --paper-2: #191228;
+  --ink: #f2ecfb;
+  --ink-soft: #bdb2d6;
+  --muted: #8d849f;
+  --violet: #e44dff;
+  --violet-deep: #d98cff;
+  --violet-light: #f7a3ff;
+  --violet-tint: rgba(228, 77, 255, 0.15);
+  --amber: #3ddbe8;
+  --green: #3fae7d;
+  --card: #1b1428;
+  --line: rgba(242, 236, 251, 0.13);
+  --line-strong: rgba(242, 236, 251, 0.28);
+  --depth-1: 0 1px 0 rgba(0, 0, 0, 0.4), 0 4px 12px -4px rgba(0, 0, 0, 0.5);
+  --depth-2: 0 2px 0 rgba(0, 0, 0, 0.4), 0 14px 34px -12px rgba(0, 0, 0, 0.65);
+  --depth-3: 0 4px 0 rgba(0, 0, 0, 0.45), 0 30px 60px -24px rgba(0, 0, 0, 0.8);
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(900px 480px at 85% -5%, rgba(211, 49, 232, 0.16), transparent 60%),
+    radial-gradient(700px 420px at -10% 30%, rgba(61, 219, 232, 0.07), transparent 60%),
+    var(--paper);
+}
+html[data-theme="dark"] body::before {
+  background-image:
+    linear-gradient(rgba(211, 49, 232, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(211, 49, 232, 0.09) 1px, transparent 1px);
+}
+
+html[data-theme="dark"] .nav { background: rgba(19, 17, 24, 0.85); }
+html[data-theme="dark"] .burger { background: rgba(26, 22, 34, 0.8); color: var(--ink); }
+html[data-theme="dark"] .btn-ghost { background: rgba(26, 22, 34, 0.55); color: var(--ink); }
+
+html[data-theme="dark"] .hero h1,
+html[data-theme="dark"] .hero h1 em,
+html[data-theme="dark"] .section-head h2,
+html[data-theme="dark"] .lesson-header h1,
+html[data-theme="dark"] .lesson-body h2 { text-shadow: none; }
+
+html[data-theme="dark"] .hero-card3d { background: rgba(23, 19, 31, 0.92); }
+html[data-theme="dark"] .stats { background: linear-gradient(180deg, #1a1626, #161320); }
+html[data-theme="dark"] .stat b { text-shadow: none; }
+html[data-theme="dark"] .module-index {
+  color: var(--violet-light);
+  text-shadow: 0 0 26px rgba(211, 49, 232, 0.35), 0 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+html[data-theme="dark"] .card { background: linear-gradient(180deg, #1a1626, #171320); }
+html[data-theme="dark"] .module { background: linear-gradient(180deg, #1a1626, #161320); }
+html[data-theme="dark"] .tier,
+html[data-theme="dark"] .faq details,
+html[data-theme="dark"] .toc { background: linear-gradient(180deg, #1a1626, #171320); }
+html[data-theme="dark"] .tier-popular { background: linear-gradient(180deg, #251d40, #1c1633); }
+html[data-theme="dark"] .tier-price { text-shadow: none; }
+
+html[data-theme="dark"] table { background: transparent; }
+html[data-theme="dark"] tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.035); }
+
+html[data-theme="dark"] .lesson-body blockquote {
+  background: linear-gradient(180deg, #251c45, #1e1737);
+  color: var(--ink);
+}
+html[data-theme="dark"] .lesson-body code {
+  background: #272135; color: #cfc4ef;
+}
+html[data-theme="dark"] .callout { background: linear-gradient(180deg, #1a1626, #201a2e); }
+html[data-theme="dark"] .task { background: linear-gradient(180deg, #1a1626, #171320); }
+html[data-theme="dark"] .test { background: rgba(26, 22, 38, 0.6); }
+html[data-theme="dark"] .np-quiz-opt { background: rgba(255, 255, 255, 0.04); }
+html[data-theme="dark"] .np-quiz-opt:hover { background: rgba(255, 255, 255, 0.08); }
+
+html[data-theme="dark"] .np-progress,
+html[data-theme="dark"] .np-course-progress { background: var(--card); }
+html[data-theme="dark"] .np-course-progress { background: linear-gradient(180deg, rgba(240, 125, 255, 0.10), transparent 70%), var(--card); }
+
+html[data-theme="dark"] .np-top { box-shadow: 0 18px 40px -16px rgba(91, 61, 245, 0.7); }
+
+/* уменьшенная анимация — все новые украшения отключаем */
+@media (prefers-reduced-motion: reduce) {
+  .hero-card3d { animation: none; }
+  .btn-primary::after { display: none; }
+  .np-ring .fg, .np-bar i { transition: none; }
+}

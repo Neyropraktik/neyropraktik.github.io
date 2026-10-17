@@ -82,15 +82,19 @@ def new_order_id() -> str:
     return f"NP-{int(time.time() * 1000) % 10_000_000}"
 
 
-MENU_KEYBOARD = {
-    "inline_keyboard": [
+def menu_keyboard(env: dict) -> dict:
+    """Главное меню бота. Если задан BOOSTY_URL — добавляется кнопка канала."""
+    buttons = [
         [{"text": "🛒 Купить курс", "callback_data": "catalog"}],
         [{"text": "🆓 Бесплатный чек-лист", "callback_data": "checklist"}],
         [{"text": "📚 Программа", "callback_data": "program"},
          {"text": "❓ Вопросы", "callback_data": "faq"}],
         [{"text": "✍️ Написать менеджеру", "url": "https://t.me/neuropraktik_ru"}],
     ]
-}
+    boosty = env.get("BOOSTY_URL", "")
+    if boosty.startswith("http"):
+        buttons.append([{"text": "💜 Boosty — посты и разборы", "url": boosty}])
+    return {"inline_keyboard": buttons}
 
 # PDF-материалы, которые бот прикрепляет
 CHECKLIST_PDF = BASE_DIR / "pdf" / "NeyroPraktik-Checklist-10-shagov.pdf"
@@ -170,6 +174,7 @@ def tier_card(t: dict) -> str:
 def catalog_text() -> str:
     return (
         "<b>Курс «НейроПрактик 2026»</b>\n"
+        "ИИ • Идеи • Практика • Результат\n"
         "5 модулей · 17 уроков · 9 заданий · 5 тестов · финальный проект\n\n"
         "Выберите тариф — после оплаты бот сразу пришлёт доступ:"
     )
@@ -244,14 +249,15 @@ def send(token: str, chat_id, text: str, keyboard: dict | None = None) -> dict:
     return call(token, "sendMessage", **params)
 
 
-def send_welcome(token: str, chat_id) -> None:
+def send_welcome(token: str, env: dict, chat_id) -> None:
     text = (
-        "<b>НейроПрактик 2026</b> — текстовый курс от промпта до автоматизации.\n\n"
+        "<b>НейроПрактик 2026</b> — курс от промпта до автоматизации.\n"
+        "ИИ • Идеи • Практика • Результат\n\n"
         "5 модулей, 17 уроков, 9 заданий, 5 тестов и финальный проект. "
         "Без вебинаров — учитесь в своём темпе.\n\n"
         "Выберите действие:"
     )
-    send(token, chat_id, text, MENU_KEYBOARD)
+    send(token, chat_id, text, menu_keyboard(env))
 
 
 def send_checklist(token: str, chat_id) -> None:
@@ -341,7 +347,7 @@ def start_manual_payment(token: str, env: dict, chat_id, tier_id: str) -> None:
 def deliver(token: str, env: dict, chat_id, tier_id: str, charge_id: str = "") -> None:
     tier = next((t for t in TIERS if t["id"] == tier_id), TIERS[0])
     course_url = env.get("COURSE_URL", "")
-    send(token, chat_id, access_text(tier, course_url), MENU_KEYBOARD)
+    send(token, chat_id, access_text(tier, course_url), menu_keyboard(env))
     for pdf in TIER_PDFS.get(tier_id, []):
         upload(token, "sendDocument", chat_id, pdf)
     send(token, chat_id,
@@ -366,10 +372,10 @@ def deliver(token: str, env: dict, chat_id, tier_id: str, charge_id: str = "") -
              f"Покупатель: chat_id={chat_id}\ncharge_id: {charge_id}".replace(",", " "))
 
 
-def send_faq(token: str, chat_id) -> None:
+def send_faq(token: str, env: dict, chat_id) -> None:
     text = "<b>Частые вопросы</b>\n\n" + "\n\n".join(f"<b>{q}</b>\n{a}" for q, a in FAQ)
     text += "\n\nОстались вопросы — напишите менеджеру."
-    send(token, chat_id, text, MENU_KEYBOARD)
+    send(token, chat_id, text, menu_keyboard(env))
 
 
 def send_program(token: str, env: dict, chat_id) -> None:
@@ -377,7 +383,7 @@ def send_program(token: str, env: dict, chat_id) -> None:
     url = env.get("COURSE_URL", "")
     if url.startswith("http"):
         text += f"\n\n{url}"
-    send(token, chat_id, text, MENU_KEYBOARD)
+    send(token, chat_id, text, menu_keyboard(env))
 
 
 def send_orders(token: str, env: dict, chat_id) -> None:
@@ -432,7 +438,7 @@ def handle_update(env: dict, update: dict) -> None:
         elif data == "program":
             send_program(token, env, chat_id)
         elif data == "faq":
-            send_faq(token, chat_id)
+            send_faq(token, env, chat_id)
         elif data.startswith("tier:"):
             send_payment_choice(token, chat_id, data.split(":", 1)[1])
         elif data.startswith("pay_stars:"):
@@ -447,7 +453,7 @@ def handle_update(env: dict, update: dict) -> None:
     if not chat_id:
         return
     if text in ("/start", "/menu"):
-        send_welcome(token, chat_id)
+        send_welcome(token, env, chat_id)
     elif text in ("/catalog", "/buy"):
         send_catalog(token, chat_id)
     elif text in ("/checklist", "/checklist@neuropraktik_rubot"):
@@ -455,13 +461,13 @@ def handle_update(env: dict, update: dict) -> None:
     elif text == "/program":
         send_program(token, env, chat_id)
     elif text == "/faq":
-        send_faq(token, chat_id)
+        send_faq(token, env, chat_id)
     elif text == "/orders":
         send_orders(token, env, chat_id)
     elif text:
         send(token, chat_id,
              "Нажмите /start — открою меню курса: тарифы, программа, вопросы.",
-             MENU_KEYBOARD)
+             menu_keyboard(env))
 
 
 def main() -> None:

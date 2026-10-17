@@ -39,6 +39,10 @@ FONTS = [
 SANS = "DejaVu Sans"
 MONO = "DejaVu Sans Mono"
 
+# Бренд «НейроПрактик»: заголовки — маджента (см. assets/brand/README.md)
+BRAND_HEADING = (164, 31, 196)   # #a41fc4
+INK = (23, 19, 15)
+
 
 def find_font_file(name: str):
     for d in FONT_SEARCH_DIRS:
@@ -131,20 +135,26 @@ def build_pdf(md_path: str, out_path: str) -> None:
 
         if line.startswith("# "):
             pdf.set_font(SANS, size=18, style="B")
+            pdf.set_text_color(*BRAND_HEADING)
             pdf.multi_cell(0, 8, fit_tokens(pdf, line[2:].strip(), full_w),
                            align="C", new_x="LMARGIN")
+            pdf.set_text_color(*INK)
             pdf.ln(3)
             pdf.set_font(SANS, size=12)
 
         elif line.startswith("## "):
             pdf.set_font(SANS, size=14, style="B")
+            pdf.set_text_color(*BRAND_HEADING)
             pdf.multi_cell(0, 7, fit_tokens(pdf, line[3:].strip(), full_w), new_x="LMARGIN")
+            pdf.set_text_color(*INK)
             pdf.ln(2)
             pdf.set_font(SANS, size=12)
 
         elif line.startswith("### "):
             pdf.set_font(SANS, size=12, style="B")
+            pdf.set_text_color(*BRAND_HEADING)
             pdf.multi_cell(0, 6, fit_tokens(pdf, line[4:].strip(), full_w), new_x="LMARGIN")
+            pdf.set_text_color(*INK)
 
         elif line.startswith("|"):
             cells = [c.strip() for c in line.strip("|").split("|")]
