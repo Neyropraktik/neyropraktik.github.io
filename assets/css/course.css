@@ -376,7 +376,16 @@ html.np-unlocked .gate-content { display: block; }
   border: 1px solid var(--line); border-radius: var(--radius);
   padding: 28px 26px; margin: 14px 0 26px; box-shadow: var(--depth-2);
 }
-.lock-icon { font-size: 34px; line-height: 1; margin-bottom: 10px; }
+.lock-icon {
+  width: 56px; height: 56px; border-radius: 18px; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(211, 49, 232, 0.10); border: 1px solid rgba(211, 49, 232, 0.30);
+  color: var(--violet-deep); box-shadow: var(--depth-1);
+}
+.lock-icon svg { width: 26px; height: 26px; display: block; }
+html[data-theme="dark"] .lock-icon {
+  background: rgba(228, 77, 255, 0.13); border-color: rgba(228, 77, 255, 0.38); color: var(--violet);
+}
 .lock-card h2 { font-size: 24px; margin-bottom: 10px; }
 .lock-card p { color: var(--ink-soft); margin-bottom: 10px; }
 .lock-note { font-size: 15px; }
@@ -437,4 +446,6 @@ html[data-theme="dark"] .chip-lock { border-color: rgba(228, 77, 255, 0.5); }
 
 .modules-note { margin-top: 18px; color: var(--muted); font-size: 15px; }
 
-.np-lock-mark, .np-unlock-mark { font-size: 12px; }
+.np-lock-mark { display: inline-flex; vertical-align: -2px; margin-left: 6px; color: var(--muted); }
+.np-lock-mark svg { width: 13px; height: 13px; display: block; }
+.np-unlock-mark { margin-left: 6px; font-size: 13px; font-weight: 600; color: var(--green); }

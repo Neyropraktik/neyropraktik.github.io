@@ -74,13 +74,13 @@
         if (!open) {
           open = doc.createElement("span");
           open.className = "np-unlock-mark";
-          open.textContent = " 🔓";
+          open.textContent = " ✓";
           a.appendChild(open);
         }
       } else if (!lock) {
         lock = doc.createElement("span");
         lock.className = "np-lock-mark";
-        lock.textContent = " 🔒";
+        lock.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="10" width="15" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.6a4 4 0 0 1 8 0V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
         a.appendChild(lock);
       }
     }
